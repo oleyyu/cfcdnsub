@@ -238,7 +238,7 @@ export function renderRawSubscription(nodes) {
 }
 
 export function renderClashSubscription(nodes) {
-  const supportedNodes = nodes.filter(isClashSupportedNode);
+  const supportedNodes = ensureUniqueNodeNames(nodes.filter(isClashSupportedNode));
   if (!supportedNodes.length) {
     throw new Error('没有可导出为 Clash 的节点。当前版本主要支持 VMess/VLESS/Trojan 的 WS/TCP/GRPC/HTTP 常见格式。');
   }
@@ -696,6 +696,24 @@ function buildNodeName(baseName, suffix) {
   const cleanBase = String(baseName || '').trim() || 'node';
   const cleanSuffix = String(suffix || '').trim();
   return cleanSuffix ? `${cleanBase} | ${cleanSuffix}` : cleanBase;
+}
+
+function ensureUniqueNodeNames(nodes) {
+  const seen = new Map();
+  return nodes.map((node) => {
+    const baseName = String(node.name || 'proxy').trim() || 'proxy';
+    const count = seen.get(baseName) || 0;
+    seen.set(baseName, count + 1);
+    if (count === 0) {
+      return node;
+    }
+
+    const suffix = node.endpointSource || `${node.server}:${node.port}`;
+    return {
+      ...node,
+      name: `${baseName} | ${suffix}`,
+    };
+  });
 }
 
 function getEffectiveTlsHost(node) {

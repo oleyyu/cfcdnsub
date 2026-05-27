@@ -436,6 +436,7 @@ async function sha256Hex(input) {
 
 async function buildDedupHash(body) {
   const normalized = {
+    generatorVersion: 3,
     nodeLinks: normalizeLines(body.nodeLinks || ""),
     preferredIps: normalizeLines(body.preferredIps || ""),
     namePrefix: String(body.namePrefix || "").trim(),

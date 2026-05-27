@@ -33,6 +33,13 @@ const clash = renderClashSubscription(expanded.nodes);
 assert.match(clash, /proxies:/);
 assert.match(clash, /edge\.example\.com/);
 
+const duplicateNameClash = renderClashSubscription([
+  { ...expanded.nodes[0], name: 'ShadowEscaper-Test | US | 电信', endpointSource: '104.16.1.2:443' },
+  { ...expanded.nodes[0], name: 'ShadowEscaper-Test | US | 电信', server: '104.17.2.3', endpointSource: '104.17.2.3:443' },
+]);
+assert.match(duplicateNameClash, /name: "ShadowEscaper-Test \| US \| 电信"/);
+assert.match(duplicateNameClash, /name: "ShadowEscaper-Test \| US \| 电信 \| 104\.17\.2\.3:443"/);
+
 const vlessReality = 'vless://00000000-0000-4000-8000-000000000002@origin.example.com:443?encryption=none&security=reality&sni=www.cloudflare.com&fp=chrome&pbk=PUBLIC_KEY_SAMPLE&sid=abcd1234&type=tcp&flow=xtls-rprx-vision#reality-demo';
 const parsedReality = parseNodeLinks(vlessReality);
 const expandedReality = expandNodes(parsedReality.nodes, endpoints.slice(0, 1), { keepOriginalHost: true, namePrefix: 'CF' });
