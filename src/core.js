@@ -362,6 +362,9 @@ export function renderVlessUri(node) {
   setQueryParam(params, 'flow', node.flow || '');
   setQueryParam(params, 'serviceName', node.serviceName || '');
   setQueryParam(params, 'authority', node.authority || '');
+  setQueryParam(params, 'pbk', node.publicKey || '');
+  setQueryParam(params, 'sid', node.shortId || '');
+  setQueryParam(params, 'spx', node.spiderX || '');
   const hash = node.name ? `#${encodeURIComponent(node.name)}` : '';
   return `vless://${encodeURIComponent(node.uuid)}@${formatHostForUrl(node.server)}:${node.port}?${params.toString()}${hash}`;
 }
@@ -483,6 +486,9 @@ function parseVlessUri(uri) {
     flow: String(params.flow || '').trim(),
     serviceName: String(params.serviceName || '').trim(),
     authority: String(params.authority || '').trim(),
+    publicKey: String(params.pbk || params.publicKey || '').trim(),
+    shortId: String(params.sid || params.shortId || '').trim(),
+    spiderX: String(params.spx || params.spiderX || '').trim(),
     encryption: String(params.encryption || 'none').trim() || 'none',
     params,
   };
@@ -602,6 +608,18 @@ function renderClashProxy(node) {
     }
     if (node.fp) {
       lines.push(`    client-fingerprint: ${yamlQuote(node.fp)}`);
+    }
+    if (node.type === 'vless' && node.security === 'reality') {
+      lines.push('    reality-opts:');
+      if (node.publicKey) {
+        lines.push(`      public-key: ${yamlQuote(node.publicKey)}`);
+      }
+      if (node.shortId) {
+        lines.push(`      short-id: ${yamlQuote(node.shortId)}`);
+      }
+      if (node.spiderX) {
+        lines.push(`      spider-x: ${yamlQuote(node.spiderX)}`);
+      }
     }
     lines.push(`    skip-cert-verify: ${node.allowInsecure ? 'true' : 'false'}`);
   }

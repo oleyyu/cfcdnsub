@@ -33,6 +33,15 @@ const clash = renderClashSubscription(expanded.nodes);
 assert.match(clash, /proxies:/);
 assert.match(clash, /edge\.example\.com/);
 
+const vlessReality = 'vless://00000000-0000-4000-8000-000000000002@origin.example.com:443?encryption=none&security=reality&sni=www.cloudflare.com&fp=chrome&pbk=PUBLIC_KEY_SAMPLE&sid=abcd1234&type=tcp&flow=xtls-rprx-vision#reality-demo';
+const parsedReality = parseNodeLinks(vlessReality);
+const expandedReality = expandNodes(parsedReality.nodes, endpoints.slice(0, 1), { keepOriginalHost: true, namePrefix: 'CF' });
+const clashReality = renderClashSubscription(expandedReality.nodes);
+assert.match(clashReality, /type: vless/);
+assert.match(clashReality, /reality-opts:/);
+assert.match(clashReality, /public-key: "PUBLIC_KEY_SAMPLE"/);
+assert.match(clashReality, /short-id: "abcd1234"/);
+
 const surge = renderSurgeSubscription(expanded.nodes, 'https://sub.example.com/sub/demo?target=surge');
 assert.match(surge, /\[Proxy]/);
 assert.match(surge, /vmess/);

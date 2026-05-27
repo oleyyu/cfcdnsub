@@ -1,3 +1,13 @@
+import {
+  expandNodes as expandNodesCore,
+  parseNodeLinks as parseNodeLinksCore,
+  parsePreferredEndpoints as parsePreferredEndpointsCore,
+  renderClashSubscription,
+  renderRawSubscription,
+  renderSurgeSubscription,
+  summarizeNodes,
+} from "./core.js";
+
 const CORS_HEADERS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET,POST,OPTIONS",
@@ -456,6 +466,14 @@ function checkAdmin(request, env) {
   return Boolean(env.ADMIN_TOKEN && token === env.ADMIN_TOKEN);
 }
 
+function normalizeStoredNode(node) {
+  return {
+    ...node,
+    hostHeader: node.hostHeader || node.host || "",
+    originalServer: node.originalServer || node.server || ""
+  };
+}
+
 async function handleGenerate(request, env, url) {
   let body;
 
@@ -465,8 +483,18 @@ async function handleGenerate(request, env, url) {
     return json({ ok: false, error: "请求体不是合法 JSON" }, 400);
   }
 
-  const baseNodes = parseRawLinks(body.nodeLinks || "");
-  const preferredEndpoints = parsePreferredEndpoints(body.preferredIps || "");
+  let parsedNodes;
+  let parsedEndpoints;
+
+  try {
+    parsedNodes = parseNodeLinksCore(body.nodeLinks || "");
+    parsedEndpoints = parsePreferredEndpointsCore(body.preferredIps || "");
+  } catch (error) {
+    return json({ ok: false, error: error.message || "订阅解析失败" }, 400);
+  }
+
+  const baseNodes = parsedNodes.nodes;
+  const preferredEndpoints = parsedEndpoints.endpoints;
 
   if (!baseNodes.length) {
     return json({ ok: false, error: "没有识别到可用节点" }, 400);
@@ -481,7 +509,8 @@ async function handleGenerate(request, env, url) {
     keepOriginalHost: body.keepOriginalHost !== false
   };
 
-  const nodes = buildNodes(baseNodes, preferredEndpoints, options);
+  const expanded = expandNodesCore(baseNodes, preferredEndpoints, options);
+  const nodes = expanded.nodes;
 
   const payload = {
     version: 2,
@@ -538,17 +567,16 @@ async function handleGenerate(request, env, url) {
       preferredEndpoints: preferredEndpoints.length,
       outputNodes: nodes.length
     },
-    preview: nodes.slice(0, 20).map(node => ({
-      name: node.name,
-      type: node.type,
-      server: node.server,
-      port: node.port,
-      host: node.host || "",
-      sni: node.sni || ""
+    preview: summarizeNodes(nodes, 20).map(node => ({
+      ...node,
+      host: node.host || ""
     })),
-    warnings: accessToken
-      ? []
-      : ["未检测到 SUB_ACCESS_TOKEN，订阅链接将没有第二层访问保护。"]
+    warnings: [
+      ...parsedNodes.warnings,
+      ...parsedEndpoints.warnings,
+      ...expanded.warnings,
+      ...(accessToken ? [] : ["未检测到 SUB_ACCESS_TOKEN，订阅链接将没有第二层访问保护。"])
+    ]
   });
 }
 
@@ -570,7 +598,7 @@ async function handleSub(request, url, env) {
     return text("Error: Download is turned off. Please send email to oleyyuhello@gmail.com to enable download for subscription.", 403);
   }
 
-  const nodes = record.nodes || [];
+  const nodes = (record.nodes || []).map(normalizeStoredNode);
   const target = (url.searchParams.get("target") || "raw").toLowerCase();
 
   const ip =
@@ -597,18 +625,26 @@ async function handleSub(request, url, env) {
   );
 
   if (target === "clash") {
-    return text(renderClash(nodes), 200, "text/yaml; charset=utf-8");
+    try {
+      return text(renderClashSubscription(nodes), 200, "text/yaml; charset=utf-8");
+    } catch (error) {
+      return text(error.message || "Clash subscription render failed", 400);
+    }
   }
 
   if (target === "surge") {
-    return text(
-      renderSurge(nodes, url.origin + url.pathname, env.SUB_ACCESS_TOKEN || ""),
-      200,
-      "text/plain; charset=utf-8"
-    );
+    try {
+      return text(
+        renderSurgeSubscription(nodes, url.origin + url.pathname),
+        200,
+        "text/plain; charset=utf-8"
+      );
+    } catch (error) {
+      return text(error.message || "Surge subscription render failed", 400);
+    }
   }
 
-  return text(renderRaw(nodes), 200, "text/plain; charset=utf-8");
+  return text(renderRawSubscription(nodes), 200, "text/plain; charset=utf-8");
 }
 
 async function handleAdminSubToggle(request, env, enabled) {
@@ -700,7 +736,7 @@ async function handleAdminSubInfo(request, env, url) {
       type: n.type,
       server: n.server,
       port: n.port,
-      host: n.host || "",
+      host: n.hostHeader || n.host || "",
       sni: n.sni || ""
     })),
     logs
