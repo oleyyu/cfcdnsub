@@ -25,6 +25,7 @@ assert.equal(expanded.nodes.length, 2);
 assert.equal(expanded.nodes[0].server, '104.16.1.2');
 assert.equal(expanded.nodes[0].hostHeader, 'edge.example.com');
 assert.equal(expanded.nodes[1].port, 2053);
+assert.equal(expanded.nodes[0].name, 'demo-ws-tls | CF | HK');
 
 const raw = renderRawSubscription(expanded.nodes);
 assert.ok(raw.length > 10);
