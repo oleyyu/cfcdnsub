@@ -14,12 +14,16 @@ const CORS_HEADERS = {
   "access-control-allow-headers": "Content-Type, X-Admin-Token, Authorization"
 };
 
-function json(data, status = 200) {
+const SITE_AUTH_COOKIE = "se_site_auth";
+const SITE_AUTH_MAX_AGE = 60 * 60 * 12;
+
+function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data, null, 2), {
     status,
     headers: {
       "content-type": "application/json; charset=utf-8",
-      ...CORS_HEADERS
+      ...CORS_HEADERS,
+      ...extraHeaders
     }
   });
 }
@@ -30,6 +34,17 @@ function text(body, status = 200, contentType = "text/plain; charset=utf-8") {
     headers: {
       "content-type": contentType,
       ...CORS_HEADERS
+    }
+  });
+}
+
+function html(body, status = 200, extraHeaders = {}) {
+  return new Response(body, {
+    status,
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      ...CORS_HEADERS,
+      ...extraHeaders
     }
   });
 }
@@ -467,6 +482,118 @@ function checkAdmin(request, env) {
   return Boolean(env.ADMIN_TOKEN && token === env.ADMIN_TOKEN);
 }
 
+async function getSiteAuthValue(env) {
+  const password = String(env.SITE_PASSWORD || "").trim();
+  if (!password) return "";
+  return sha256Hex(`site:${password}`);
+}
+
+function getCookie(request, name) {
+  const cookie = request.headers.get("Cookie") || "";
+  const prefix = `${name}=`;
+  return cookie
+    .split(";")
+    .map(part => part.trim())
+    .find(part => part.startsWith(prefix))
+    ?.slice(prefix.length) || "";
+}
+
+async function hasSiteAccess(request, env) {
+  const expected = await getSiteAuthValue(env);
+  if (!expected) return true;
+  return getCookie(request, SITE_AUTH_COOKIE) === expected;
+}
+
+async function handleSiteLogin(request, env) {
+  const expected = await getSiteAuthValue(env);
+  if (!expected) {
+    return json({ ok: true, disabled: true });
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ ok: false, error: "Invalid JSON" }, 400);
+  }
+
+  const password = String(body.password || "");
+  const provided = await sha256Hex(`site:${password}`);
+  if (provided !== expected) {
+    return json({ ok: false, error: "Incorrect password" }, 403);
+  }
+
+  return json({ ok: true }, 200, {
+    "set-cookie": `${SITE_AUTH_COOKIE}=${expected}; Max-Age=${SITE_AUTH_MAX_AGE}; Path=/; HttpOnly; Secure; SameSite=Strict`
+  });
+}
+
+function privateLoginPage() {
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Private Access</title>
+<style>
+:root{color-scheme:dark;--fg:#f6f1e8;--muted:#c6bdae;--accent:#eb5757;--line:rgba(255,243,225,.14)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;font-family:Manrope,Noto Sans SC,system-ui,sans-serif;color:var(--fg);background:radial-gradient(ellipse 80% 60% at 75% 10%,rgba(235,87,87,.32),transparent 60%),radial-gradient(ellipse 90% 70% at 10% 90%,rgba(20,8,10,.7),transparent 65%),linear-gradient(135deg,#1a0a0a 0%,#0c0606 50%,#000 100%)}
+.card{width:min(100%,420px);padding:30px;border-radius:24px;background:rgba(255,243,225,.06);border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 30px 80px -22px rgba(0,0,0,.65);backdrop-filter:blur(30px) saturate(180%)}
+.eyebrow{display:inline-flex;margin-bottom:16px;padding:6px 12px;border-radius:999px;background:rgba(255,243,225,.08);border:1px solid var(--line);color:#f59595;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+h1{margin:0 0 10px;font-family:Georgia,Noto Serif SC,serif;font-size:32px;line-height:1.05;color:#f59595}
+p{margin:0 0 20px;color:var(--muted);line-height:1.6}
+input{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(12,6,6,.62);color:var(--fg);outline:none;font:inherit}
+input:focus{border-color:rgba(235,87,87,.65);box-shadow:0 0 0 4px rgba(235,87,87,.16)}
+button{width:100%;margin-top:12px;padding:14px 18px;border:0;border-radius:999px;color:#fff8f6;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#eb5757 0%,#b32d2d 70%,#1a0606 100%);box-shadow:0 14px 30px -6px rgba(235,87,87,.45)}
+.error{min-height:20px;margin-top:10px;color:#fecdd3;font-size:13px}
+</style>
+</head>
+<body>
+<form class="card" id="loginForm">
+  <div class="eyebrow">Private</div>
+  <h1>Access Required</h1>
+  <p>Enter the site password to continue.</p>
+  <input id="password" type="password" placeholder="Password" autocomplete="current-password" autofocus />
+  <button id="loginBtn" type="submit">Enter</button>
+  <div id="error" class="error"></div>
+</form>
+<script>
+const form=document.getElementById("loginForm");
+const input=document.getElementById("password");
+const error=document.getElementById("error");
+const btn=document.getElementById("loginBtn");
+form.addEventListener("submit",async event=>{
+  event.preventDefault();
+  error.textContent="";
+  btn.disabled=true;
+  btn.textContent="Checking...";
+  try{
+    const res=await fetch("/api/site-login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({password:input.value})});
+    const data=await res.json();
+    if(!res.ok||!data.ok) throw new Error(data.error||"Incorrect password");
+    location.reload();
+  }catch(err){
+    error.textContent=err.message||"Login failed";
+  }finally{
+    btn.disabled=false;
+    btn.textContent="Enter";
+  }
+});
+</script>
+</body>
+</html>`;
+}
+
+async function requireSiteAccess(request, env) {
+  if (await hasSiteAccess(request, env)) return null;
+  const acceptsHtml = (request.headers.get("Accept") || "").includes("text/html");
+  if (acceptsHtml || request.method === "GET") {
+    return html(privateLoginPage(), 401);
+  }
+  return json({ ok: false, error: "Private access required" }, 401);
+}
+
 function normalizeStoredNode(node) {
   return {
     ...node,
@@ -860,7 +987,13 @@ export default {
       });
     }
 
+    if (request.method === "POST" && url.pathname === "/api/site-login") {
+      return handleSiteLogin(request, env);
+    }
+
     if (request.method === "POST" && url.pathname === "/api/generate") {
+      const gate = await requireSiteAccess(request, env);
+      if (gate) return gate;
       return handleGenerate(request, env, url);
     }
 
@@ -893,6 +1026,8 @@ export default {
     }
 
     if (env.ASSETS) {
+      const gate = await requireSiteAccess(request, env);
+      if (gate) return gate;
       return env.ASSETS.fetch(request);
     }
 

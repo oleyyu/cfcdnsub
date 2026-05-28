@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Preferred IP Subscription Generator</title>
+    <title>ShadowEscaper Sub Generator</title>
     <meta
       name="description"
-      content="Replace server addresses in vmess/vless/trojan nodes with preferred IPs. Exports for Clash, V2rayN, Shadowrocket, Surge."
+      content="Private ShadowEscaper subscription generator."
     />
     <link rel="icon" href="/icons/auto.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -25,12 +25,12 @@
             <span>Subscription Generator</span>
           </h1>
           <p class="lead">
-            Swap your vmess/vless/trojan server addresses for preferred IPs and export to Clash, V2rayN, Shadowrocket, and Surge. Optimized for users in China.
+            Private tool for generating personal subscription links.
           </p>
         </div>
         <div class="hero-note">
-          <strong>About</strong>
-          <p>ShadowEscaper is a proxy service that keeps you private and safe online.</p>
+          <strong>Private</strong>
+          <p>Access is restricted by site password.</p>
         </div>
       </section>
 
@@ -45,7 +45,7 @@
               placeholder="Supports vmess://, vless://, trojan:// (one per line) or raw base64 subscription content."
               required
             ></textarea>
-            <p class="hint">Best with self-hosted VMess / VLESS / Trojan over WS + TLS.</p>
+            <p class="hint">Paste one node per line, or paste raw base64 subscription content.</p>
           </div>
 
           <div>
@@ -83,20 +83,17 @@ cf.example.com:443#US-Edge"
         </form>
 
         <aside class="card stack-md tips">
-          <h2>Notes</h2>
+          <h2>Links</h2>
           <ul>
-            <li>Bring your own preferred IPs — this tool only swaps them in.</li>
-            <li>One node set, multiple export formats.</li>
-            <li>Keep "original Host / SNI" on for Cloudflare CDN.</li>
-            <li>Links are server-side encrypted. Don't share them publicly.</li>
+            <li><strong>Raw:</strong> V2rayN / Shadowrocket</li>
+            <li><strong>Clash:</strong> Clash / Mihomo</li>
+            <li><strong>Surge:</strong> Surge profile</li>
           </ul>
 
           <div class="client-box">
-            <h3>Which link to use</h3>
+            <h3>Setting</h3>
             <ul>
-              <li><strong>V2rayN / Shadowrocket:</strong> raw link</li>
-              <li><strong>Clash / Mihomo:</strong> Clash link</li>
-              <li><strong>Surge:</strong> Surge link</li>
+              <li>Keep original Host / SNI when using CDN endpoints.</li>
             </ul>
           </div>
         </aside>

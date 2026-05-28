@@ -229,8 +229,8 @@ pre{
 <div id="lockOverlay" class="lock-overlay">
   <div class="lock-card">
     <h2>🔒 Admin Access</h2>
-    <p>Enter token password to continue.</p>
-    <input id="lockApiBase" type="hidden" value="https://cfcdnsub.oleyyuissmart.workers.dev">
+    <p>Enter admin token.</p>
+    <input id="lockApiBase" type="hidden" value="">
     <input id="lockToken" type="password" placeholder="Enter Token Password" autocomplete="current-password">
     <div id="lockError" class="lock-error"></div>
     <button id="lockBtn" onclick="tryUnlock()">Unlock</button>
@@ -242,7 +242,7 @@ pre{
   <div class="header">
     <div class="brand">
       <h1>ShadowEscaper Admin</h1>
-      <p>Subscription permission, nodes, and download audit logs.</p>
+      <p>Private subscription controls.</p>
     </div>
     <div style="display:flex;gap:10px;align-items:center">
       <span id="globalStatus" class="badge neutral">Global: Unknown</span>
@@ -267,7 +267,7 @@ pre{
 
   <div class="card">
     <div class="controls">
-      <input id="apiBase" value="https://cfcdnsub.oleyyuissmart.workers.dev" placeholder="API Base">
+      <input id="apiBase" value="" placeholder="API Base">
       <input id="subId" placeholder="Subscription shortId">
     </div>
 
@@ -362,8 +362,7 @@ pre{
 <div id="toast" class="toast"></div>
 
 <script>
-const SS_TOKEN = "se_admin_token";
-const SS_BASE = "se_admin_base";
+let adminToken = "";
 
 function esc(s){
   return String(s ?? "")
@@ -391,15 +390,15 @@ async function readJson(res){
 
 function getConfig(){
   return {
-    apiBase: (sessionStorage.getItem(SS_BASE) || document.getElementById("apiBase").value).replace(/\/$/, ""),
-    token: sessionStorage.getItem(SS_TOKEN) || "",
+    apiBase: document.getElementById("apiBase").value.replace(/\/$/, ""),
+    token: adminToken,
     id: document.getElementById("subId").value.trim()
   };
 }
 
 // ===== Lock Screen =====
 async function tryUnlock(){
-  const base = document.getElementById("lockApiBase").value.replace(/\/$/, "").trim();
+  const base = (document.getElementById("lockApiBase").value || location.origin).replace(/\/$/, "").trim();
   const token = document.getElementById("lockToken").value.trim();
   const err = document.getElementById("lockError");
   const btn = document.getElementById("lockBtn");
@@ -428,10 +427,7 @@ async function tryUnlock(){
       return;
     }
 
-    // Success
-    sessionStorage.setItem(SS_TOKEN, token);
-    sessionStorage.setItem(SS_BASE, base);
-
+    adminToken = token;
     document.getElementById("apiBase").value = base;
     document.getElementById("lockOverlay").style.display = "none";
     document.getElementById("app").style.display = "block";
@@ -449,28 +445,17 @@ async function tryUnlock(){
 }
 
 function logout(){
-  sessionStorage.removeItem(SS_TOKEN);
-  sessionStorage.removeItem(SS_BASE);
+  adminToken = "";
   location.reload();
-}
-
-// Auto-unlock if token already in session
-function tryAutoUnlock(){
-  const token = sessionStorage.getItem(SS_TOKEN);
-  const base = sessionStorage.getItem(SS_BASE);
-  if(token && base){
-    document.getElementById("lockToken").value = token;
-    document.getElementById("lockApiBase").value = base;
-    tryUnlock();
-  }
 }
 
 // Enter key on lock
 document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("lockApiBase").value = location.origin;
+  document.getElementById("apiBase").value = location.origin;
   document.getElementById("lockToken").addEventListener("keydown", e => {
     if(e.key === "Enter") tryUnlock();
   });
-  tryAutoUnlock();
 });
 
 // ===== Existing actions =====
