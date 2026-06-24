@@ -724,7 +724,7 @@ async function handleSub(request, url, env) {
   const globalAllow = await env.SUB_STORE.get("global:download:allow");
 
   if (globalAllow !== "true" && record.downloadEnabled !== true) {
-    return text("Error: Download is turned off. Please send email to oleyyuhello@gmail.com to enable download for subscription.", 403);
+    return text("Error: Downloads are disabled. Please email oleyyuhello@gmail.com to enable downloads for your subscription.", 403);
   }
 
   const nodes = (record.nodes || []).map(normalizeStoredNode);
