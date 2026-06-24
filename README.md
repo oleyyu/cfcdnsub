@@ -36,77 +36,55 @@ cloudflaresub/
 └─ package.json
 ```
 
-## 快速开始（Cloudflare 网页端）
-```text
-视频部署流程：https://youtu.be/E5PI0LsQ43M
-```
-下面按 Cloudflare Dashboard 流程操作，尽量不依赖命令行。
+## 快速开始（Wrangler / wrangler.toml）
 
-### 1) 准备代码
+本项目建议直接用 `wrangler.toml` 部署，不依赖 Cloudflare Git 连接。
 
-- 把本项目代码放到本地（你现在已经有）
-- 确认 `wrangler.toml` 中 `name`、`main`、`assets` 路径与项目一致
-
-### 2) 在 Dashboard 创建 Worker
-
-- 打开 Cloudflare Dashboard
-- 进入 `Workers & Pages`
-- 点击 `Create application` -> `Create Worker`
-- 先创建一个 Worker（用于初始化项目）
-
-### 3) 绑定到 GitHub 仓库（推荐）
-
-- 在 `Workers & Pages` 点击 `Create` -> `Import a repository`
-- 授权 GitHub，并选择仓库 `InfiCheesy/cloudflaresub`
-- 构建设置建议：
-  - Framework preset: `None`
-  - Build command: 留空
-  - Build output directory: 留空
-- 保存并开始部署
-
-说明：这个项目是 Worker 项目，入口在 `src/worker.js`，静态资源在 `public/`。
-
-### 4) 创建 KV Namespace
+### 1) 创建 KV Namespace
 
 - 进入 `Storage & Databases` -> `KV`
 - 点击 `Create namespace`
 - 名称建议：`SUB_STORE`
+- 把生成的 namespace id 填到 `wrangler.toml` 的 `[[kv_namespaces]].id`
 
-### 5) 给 Worker 绑定 KV
+### 2) 确认 wrangler.toml
 
-- 回到 Worker 项目页面
-- 进入 `Settings` -> `Bindings`
-- 点击 `Add binding`，类型选择 `KV namespace`
-- Variable name 填：`SUB_STORE`
-- Namespace 选择上一步创建的 KV
-- 保存并重新部署
+当前配置会部署 Worker `cfcdnsub2`，并绑定到：
 
-### 6) 配置访问令牌 Secret
+```text
+admin.crossthebluejail.top
+```
 
-- 在 Worker 项目中进入 `Settings` -> `Variables`
-- 在 `Secrets` 区域添加：
-  - Key: `SUB_ACCESS_TOKEN`
-  - Value: 你自定义的一串令牌
-- 保存后重新部署
+如果你的 KV id 或域名不同，先改 `wrangler.toml`。
+
+### 3) 配置 Secrets
+
+```bash
+npx wrangler secret put SITE_PASSWORD
+npx wrangler secret put ADMIN_TOKEN
+npx wrangler secret put SUB_ACCESS_TOKEN
+```
 
 说明：
-- 设置后，请求 `/sub/:id` 必须带 `?token=...`
-- 不设置也可运行，但订阅链接没有二次访问保护
+- `SITE_PASSWORD`: 进入网页的密码
+- `ADMIN_TOKEN`: admin panel 密码
+- `SUB_ACCESS_TOKEN`: 订阅链接 `?token=` 保护
 
-### 7) 验证线上服务
+### 4) 部署
 
-- 打开 Worker 域名（如 `https://<name>.<subdomain>.workers.dev`）
-- 访问首页 `/`，应看到前端表单
+```bash
+npx wrangler deploy
+```
+
+### 5) 验证线上服务
+
+- 打开 `https://admin.crossthebluejail.top`
+- 先输入 `SITE_PASSWORD`
 - 在页面输入节点和优选地址，点击生成
 - 拿到 `/sub/:id` 后测试：
   - `?target=raw&token=...`
   - `?target=clash&token=...`
   - `?target=surge&token=...`
-
-### 8) 后续更新代码
-
-- 如果你使用 GitHub 自动部署：直接 push 到对应分支，Cloudflare 会自动重新部署
-- 如果你不用 GitHub 自动部署：可在 Dashboard 在线编辑器中修改后手动部署
 
 ## API 说明
 

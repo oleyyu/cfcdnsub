@@ -3,6 +3,7 @@ import {
   parseNodeLinks as parseNodeLinksCore,
   parsePreferredEndpoints as parsePreferredEndpointsCore,
   renderClashSubscription,
+  renderNodeUri,
   renderRawSubscription,
   renderSurgeSubscription,
   summarizeNodes,
@@ -852,6 +853,9 @@ async function handleAdminSubInfo(request, env, url) {
 
   logs.sort((a, b) => new Date(b.time) - new Date(a.time));
 
+  const accessToken = env.SUB_ACCESS_TOKEN || "";
+  const subUrl = target => buildSubUrl(url.origin, id, target, accessToken);
+
   return json({
     ok: true,
     id,
@@ -859,16 +863,110 @@ async function handleAdminSubInfo(request, env, url) {
     createdAt: record.createdAt || null,
     updatedAt: record.updatedAt || null,
     nodeCount: (record.nodes || []).length,
+    subscriptionUrls: {
+      auto: subUrl(""),
+      raw: subUrl("raw"),
+      clash: subUrl("clash"),
+      surge: subUrl("surge")
+    },
     nodes: (record.nodes || []).map(n => ({
       name: n.name,
       type: n.type,
       server: n.server,
       port: n.port,
       host: n.hostHeader || n.host || "",
-      sni: n.sni || ""
+      sni: n.sni || "",
+      uri: safeRenderNodeUri(n),
+      originalUri: safeRenderNodeUri(
+        n.originalServer && n.originalServer !== n.server
+          ? { ...n, server: n.originalServer }
+          : n
+      )
     })),
     logs
   });
+}
+
+function buildSubUrl(origin, id, target, accessToken) {
+  const params = new URLSearchParams();
+  if (target) params.set("target", target);
+  params.set("token", accessToken);
+  return `${origin}/sub/${id}?${params.toString()}`;
+}
+
+function safeRenderNodeUri(node) {
+  try {
+    return renderNodeUri(node);
+  } catch {
+    return "";
+  }
+}
+
+async function handleAdminSubDelete(request, env) {
+  if (!checkAdmin(request, env)) {
+    return json({ ok: false, error: "Forbidden" }, 403);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
+
+  const id = String(body.id || "").trim();
+
+  if (!id) {
+    return json({ ok: false, error: "Missing id" }, 400);
+  }
+
+  const key = `sub:${id}`;
+  const raw = await env.SUB_STORE.get(key);
+
+  if (!raw) {
+    return json({ ok: false, error: "Subscription not found" }, 404);
+  }
+
+  // Delete the subscription record.
+  await env.SUB_STORE.delete(key);
+
+  // Delete associated download logs.
+  let deletedLogs = 0;
+  let cursor;
+  do {
+    const page = await env.SUB_STORE.list({
+      prefix: `download:${id}:`,
+      limit: 1000,
+      cursor
+    });
+    for (const item of page.keys) {
+      await env.SUB_STORE.delete(item.name);
+      deletedLogs++;
+    }
+    cursor = page.list_complete ? undefined : page.cursor;
+  } while (cursor);
+
+  // Delete any dedup mappings pointing at this id so the content can be
+  // regenerated cleanly instead of resolving to a now-missing record.
+  let deletedDedup = 0;
+  cursor = undefined;
+  do {
+    const page = await env.SUB_STORE.list({
+      prefix: "dedup:",
+      limit: 1000,
+      cursor
+    });
+    for (const item of page.keys) {
+      const value = await env.SUB_STORE.get(item.name);
+      if (value === id) {
+        await env.SUB_STORE.delete(item.name);
+        deletedDedup++;
+      }
+    }
+    cursor = page.list_complete ? undefined : page.cursor;
+  } while (cursor);
+
+  return json({ ok: true, id, deletedLogs, deletedDedup });
 }
 
 async function handleAdminGlobalAllow(request, env) {
@@ -1011,6 +1109,10 @@ export default {
 
     if (request.method === "GET" && url.pathname === "/api/admin/sub/list") {
       return handleAdminSubList(request, env, url);
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/admin/sub/delete") {
+      return handleAdminSubDelete(request, env);
     }
 
     if (request.method === "POST" && url.pathname === "/api/admin/sub/global-allow") {

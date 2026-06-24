@@ -6,220 +6,280 @@
 <title>ShadowEscaper Admin</title>
 <style>
 :root{
-  --bg1:#403a3e;
-  --bg2:#be5869;
-  --glass:rgba(255,255,255,.13);
-  --border:rgba(255,255,255,.22);
-  --text:#fff;
-  --muted:rgba(255,255,255,.72);
-  --green:#4ade80;
-  --red:#fb7185;
-  --blue:#93c5fd;
-  --yellow:#fde68a;
-  --purple:#c4b5fd;
+  --bg:#0c0e14;
+  --panel:#13161f;
+  --panel-2:#171a25;
+  --elevated:#1c2030;
+  --border:#262b3a;
+  --border-soft:#1f2433;
+  --text:#e7eaf3;
+  --muted:#8b93a7;
+  --faint:#5d6478;
+  --accent:#6366f1;
+  --accent-2:#818cf8;
+  --green:#34d399;
+  --green-bg:rgba(16,185,129,.14);
+  --green-bd:rgba(52,211,153,.4);
+  --red:#f87171;
+  --red-bg:rgba(239,68,68,.14);
+  --red-bd:rgba(248,113,113,.4);
+  --amber:#fbbf24;
+  --sidebar-w:248px;
 }
 *{box-sizing:border-box}
+html,body{height:100%}
 body{
   margin:0;
-  min-height:100vh;
-  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   color:var(--text);
-  background:
-    radial-gradient(circle at 15% 20%,rgba(255,255,255,.16),transparent 28%),
-    radial-gradient(circle at 85% 10%,rgba(255,170,190,.18),transparent 30%),
-    linear-gradient(135deg,var(--bg1),var(--bg2));
-  padding:32px;
+  background:var(--bg);
+  font-size:14px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
 }
-.container{max-width:1280px;margin:0 auto}
-.header{
+a{color:var(--accent-2);text-decoration:none}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* ===== Layout ===== */
+.layout{display:flex;min-height:100vh}
+.sidebar{
+  width:var(--sidebar-w);
+  flex:0 0 var(--sidebar-w);
+  background:var(--panel);
+  border-right:1px solid var(--border-soft);
   display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:18px;
-  margin-bottom:22px;
+  flex-direction:column;
+  padding:22px 16px;
+  position:sticky;
+  top:0;
+  height:100vh;
 }
-.brand h1{margin:0;font-size:34px;letter-spacing:-.04em}
-.brand p{margin:8px 0 0;color:var(--muted)}
-.card{
-  background:var(--glass);
-  border:1px solid var(--border);
-  border-radius:28px;
-  padding:24px;
-  backdrop-filter:blur(22px);
-  box-shadow:0 24px 70px rgba(0,0,0,.28);
+.sb-brand{display:flex;align-items:center;gap:12px;padding:6px 8px 22px}
+.sb-logo{
+  width:38px;height:38px;border-radius:11px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:800;color:#fff;
+  box-shadow:0 6px 18px rgba(99,102,241,.4);
 }
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:16px;
-  margin-bottom:16px;
+.sb-brand .name{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.sb-brand .sub{font-size:11px;color:var(--faint);margin-top:1px}
+.nav{display:flex;flex-direction:column;gap:3px;flex:1}
+.nav-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--faint);padding:14px 10px 6px}
+.nav-item{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 11px;border-radius:9px;
+  color:var(--muted);font-weight:500;font-size:13.5px;
+  cursor:pointer;transition:.13s background,.13s color;
 }
-.stat{
-  background:rgba(255,255,255,.12);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:18px;
+.nav-item:hover{background:var(--elevated);color:var(--text)}
+.nav-item.active{background:var(--accent);color:#fff}
+.nav-item .ico{width:18px;text-align:center;font-size:15px}
+.sb-foot{border-top:1px solid var(--border-soft);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:18px 30px;border-bottom:1px solid var(--border-soft);
+  background:rgba(12,14,20,.7);backdrop-filter:blur(8px);
+  position:sticky;top:0;z-index:50;
 }
-.stat .label{color:var(--muted);font-size:13px}
-.stat .value{font-size:24px;font-weight:900;margin-top:8px}
-.controls{
-  display:grid;
-  grid-template-columns:1.3fr 1fr;
-  gap:12px;
-  margin:18px 0;
-}
+.topbar h1{margin:0;font-size:19px;font-weight:700;letter-spacing:-.01em}
+.topbar .crumb{font-size:12px;color:var(--faint);margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.content{padding:26px 30px 60px;max-width:1320px;width:100%}
+
+/* ===== Inputs & buttons ===== */
 input{
   width:100%;
-  padding:14px 15px;
-  border:1px solid rgba(255,255,255,.22);
-  border-radius:16px;
+  padding:10px 13px;
+  border:1px solid var(--border);
+  border-radius:9px;
   outline:none;
-  color:white;
-  background:rgba(255,255,255,.12);
+  color:var(--text);
+  background:var(--panel-2);
+  font-size:13.5px;
+  transition:.13s border,.13s box-shadow;
 }
-input::placeholder{color:rgba(255,255,255,.55)}
-.actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-bottom:22px;
-}
-button{
-  border:0;
-  border-radius:16px;
-  padding:13px 16px;
-  font-weight:900;
-  cursor:pointer;
-  transition:.15s transform,.15s filter;
-}
-button:hover{transform:translateY(-1px);filter:brightness(1.05)}
-.load{background:var(--blue)}
-.enable{background:var(--green)}
-.disable{background:var(--red)}
-.global{background:var(--yellow)}
-.list-btn{background:var(--purple)}
-.dark{background:rgba(255,255,255,.18);color:white;border:1px solid var(--border)}
-.section{margin-top:20px}
-.section-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:10px;
-}
-h2{margin:0;font-size:20px}
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:7px 12px;
-  border-radius:999px;
-  font-weight:900;
-  font-size:13px;
-}
-.on{background:rgba(34,197,94,.22);color:#bbf7d0;border:1px solid rgba(74,222,128,.5)}
-.off{background:rgba(239,68,68,.24);color:#fecdd3;border:1px solid rgba(251,113,133,.5)}
-.neutral{background:rgba(255,255,255,.14);color:white;border:1px solid var(--border)}
-.table-wrap{
-  overflow:auto;
-  border-radius:18px;
-  border:1px solid var(--border);
-  background:rgba(0,0,0,.13);
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:760px;
-}
-th,td{
-  padding:13px 14px;
-  border-bottom:1px solid rgba(255,255,255,.13);
-  text-align:left;
-  vertical-align:top;
-  font-size:14px;
-}
-th{
-  color:rgba(255,255,255,.82);
-  background:rgba(0,0,0,.23);
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:.06em;
-}
-td{color:rgba(255,255,255,.92)}
-td .link-btn{
-  background:rgba(255,255,255,.18);
-  color:white;
-  padding:6px 10px;
-  border-radius:10px;
-  font-size:12px;
-  font-weight:700;
-}
-pre{
-  background:rgba(0,0,0,.25);
-  border:1px solid var(--border);
-  padding:16px;
-  border-radius:18px;
-  overflow:auto;
-  max-height:320px;
-  color:#f8fafc;
-}
-.toast{
-  position:fixed;
-  right:24px;
-  bottom:24px;
-  background:rgba(20,20,25,.86);
-  border:1px solid rgba(255,255,255,.2);
-  color:white;
-  padding:14px 16px;
-  border-radius:16px;
-  backdrop-filter:blur(14px);
-  display:none;
-}
-.small{color:var(--muted);font-size:13px}
+input::placeholder{color:var(--faint)}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.18)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600}
 
-/* lock screen */
-.lock-overlay{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:
-    radial-gradient(circle at 30% 30%,rgba(255,255,255,.14),transparent 30%),
-    linear-gradient(135deg,var(--bg1),var(--bg2));
-  z-index:10000;
+button{
+  border:1px solid transparent;
+  border-radius:9px;
+  padding:9px 14px;
+  font-weight:600;
+  font-size:13px;
+  cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:.13s background,.13s border,.13s opacity;
+  font-family:inherit;
+}
+button:hover{opacity:.92}
+button:active{transform:translateY(1px)}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-2)}
+.enable{background:var(--green-bg);color:#6ee7b7;border-color:var(--green-bd)}
+.disable{background:var(--red-bg);color:#fca5a5;border-color:var(--red-bd)}
+.global{background:rgba(251,191,36,.14);color:#fcd34d;border-color:rgba(251,191,36,.4)}
+.load{background:var(--accent);color:#fff}
+.list-btn{background:var(--elevated);color:var(--text);border-color:var(--border)}
+.dark{background:var(--elevated);color:var(--text);border:1px solid var(--border)}
+.ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.ghost:hover{background:var(--elevated);color:var(--text)}
+
+/* ===== Cards & layout helpers ===== */
+.card{
+  background:var(--panel);
+  border:1px solid var(--border-soft);
+  border-radius:14px;
   padding:20px;
 }
+.card + .card{margin-top:18px}
+.toolbar{
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px;
+}
+.toolbar .field{flex:1;min-width:200px}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:20px;
+}
+.stat{
+  background:var(--panel);
+  border:1px solid var(--border-soft);
+  border-radius:14px;
+  padding:18px;
+  position:relative;
+  overflow:hidden;
+}
+.stat .label{color:var(--muted);font-size:12px;display:flex;align-items:center;gap:7px}
+.stat .label .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.stat .value{font-size:26px;font-weight:750;margin-top:10px;letter-spacing:-.02em}
+
+.section{margin-top:18px}
+.section-title{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;
+}
+h2{margin:0;font-size:15px;font-weight:700;letter-spacing:-.01em}
+.small{color:var(--muted);font-size:12.5px}
+
+/* ===== Badges ===== */
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;border-radius:7px;font-weight:600;font-size:12px;
+}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.9}
+.on{background:var(--green-bg);color:#6ee7b7;border:1px solid var(--green-bd)}
+.off{background:var(--red-bg);color:#fca5a5;border:1px solid var(--red-bd)}
+.neutral{background:var(--elevated);color:var(--muted);border:1px solid var(--border)}
+
+/* ===== Tables ===== */
+.table-wrap{
+  overflow:auto;
+  border-radius:12px;
+  border:1px solid var(--border-soft);
+  background:var(--panel-2);
+}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th,td{padding:12px 16px;text-align:left;vertical-align:top;font-size:13px}
+th{
+  color:var(--muted);background:var(--elevated);
+  font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;
+  border-bottom:1px solid var(--border);
+}
+td{color:var(--text);border-bottom:1px solid var(--border-soft)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:rgba(255,255,255,.018)}
+td code{font-size:12.5px;background:var(--elevated);padding:2px 7px;border-radius:6px;border:1px solid var(--border-soft)}
+td .link-btn{
+  background:var(--elevated);color:var(--text);border:1px solid var(--border);
+  padding:5px 11px;border-radius:7px;font-size:12px;font-weight:600;
+}
+td .link-btn + .link-btn{margin-left:6px}
+td .danger{background:var(--red-bg);color:#fca5a5;border:1px solid var(--red-bd)}
+td .danger:hover{background:rgba(239,68,68,.22)}
+td .uri-cell{
+  max-width:340px;font-size:11.5px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  word-break:break-all;color:var(--muted);
+}
+
+pre{
+  background:var(--panel-2);border:1px solid var(--border-soft);
+  padding:16px;border-radius:12px;overflow:auto;max-height:340px;
+  color:#cbd5e1;font-size:12.5px;line-height:1.6;margin:0;
+}
+
+/* ===== Subscription links ===== */
+.link-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.link-row .link-label{
+  flex:0 0 60px;font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.05em;color:var(--accent-2);
+}
+.link-row .link-text{
+  flex:1;background:var(--panel-2);border:1px solid var(--border-soft);
+  border-radius:8px;padding:9px 12px;font-size:12px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all;color:var(--muted);
+}
+.copy-uri{
+  background:var(--elevated);color:var(--text);border:1px solid var(--border);
+  padding:6px 11px;border-radius:7px;font-size:12px;font-weight:600;white-space:nowrap;
+}
+
+/* ===== Toast ===== */
+.toast{
+  position:fixed;right:24px;bottom:24px;
+  background:var(--elevated);border:1px solid var(--border);
+  color:var(--text);padding:13px 16px;border-radius:11px;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);display:none;z-index:9000;
+  font-size:13px;font-weight:500;
+}
+
+/* ===== Lock screen ===== */
+.lock-overlay{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(circle at 25% 20%,rgba(99,102,241,.18),transparent 35%),
+    radial-gradient(circle at 80% 80%,rgba(129,140,248,.12),transparent 40%),
+    var(--bg);
+  z-index:10000;padding:20px;
+}
 .lock-card{
-  width:100%;
-  max-width:420px;
-  background:var(--glass);
-  border:1px solid var(--border);
-  border-radius:26px;
-  padding:30px;
-  backdrop-filter:blur(22px);
-  box-shadow:0 30px 80px rgba(0,0,0,.35);
+  width:100%;max-width:400px;background:var(--panel);
+  border:1px solid var(--border);border-radius:18px;padding:32px;
+  box-shadow:0 30px 80px rgba(0,0,0,.55);
 }
-.lock-card h2{font-size:24px;margin:0 0 6px;letter-spacing:-.02em}
-.lock-card p{margin:0 0 18px;color:var(--muted);font-size:14px}
-.lock-card input{margin-bottom:12px}
-.lock-card button{
-  width:100%;
-  background:var(--blue);
-  color:#0b1a33;
-}
-.lock-error{
-  color:#fecdd3;
-  font-size:13px;
-  min-height:18px;
-  margin-bottom:8px;
-}
+.lock-card .sb-logo{width:46px;height:46px;font-size:24px;margin-bottom:18px}
+.lock-card h2{font-size:20px;margin:0 0 6px;letter-spacing:-.01em}
+.lock-card p{margin:0 0 22px;color:var(--muted);font-size:13.5px}
+.lock-card input{margin-bottom:12px;padding:12px 14px}
+.lock-card button{width:100%;justify-content:center;padding:12px;background:var(--accent);color:#fff;font-size:14px}
+.lock-card button:hover{background:var(--accent-2)}
+.lock-error{color:#fca5a5;font-size:12.5px;min-height:18px;margin-bottom:8px}
 .app{display:none}
 
-@media(max-width:850px){
-  body{padding:18px}
-  .header{display:block}
-  .grid,.controls{grid-template-columns:1fr}
+@media(max-width:920px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:760px){
+  .sidebar{
+    position:static;width:100%;height:auto;flex-basis:auto;flex-direction:row;
+    align-items:center;padding:12px 16px;border-right:0;border-bottom:1px solid var(--border-soft);
+  }
+  .sb-brand{padding:0;flex:1}
+  .nav,.nav-label{display:none}
+  .sb-foot{border-top:0;padding-top:0;flex-direction:row;align-items:center}
+  .layout{flex-direction:column}
+  .topbar{padding:14px 18px}
+  .topbar .apibase-field{display:none}
+  .content{padding:18px}
+  .grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -228,133 +288,187 @@ pre{
 <!-- Lock Screen -->
 <div id="lockOverlay" class="lock-overlay">
   <div class="lock-card">
-    <h2>🔒 Admin Access</h2>
-    <p>Enter admin token.</p>
+    <div class="sb-logo">S</div>
+    <h2>Admin Access</h2>
+    <p>Sign in with your admin token to manage subscriptions.</p>
     <input id="lockApiBase" type="hidden" value="">
-    <input id="lockToken" type="password" placeholder="Enter Token Password" autocomplete="current-password">
+    <input id="lockToken" type="password" placeholder="Admin token" autocomplete="current-password">
     <div id="lockError" class="lock-error"></div>
     <button id="lockBtn" onclick="tryUnlock()">Unlock</button>
   </div>
 </div>
 
 <!-- Main App -->
-<div id="app" class="app container">
-  <div class="header">
-    <div class="brand">
-      <h1>ShadowEscaper Admin</h1>
-      <p>Private subscription controls.</p>
-    </div>
-    <div style="display:flex;gap:10px;align-items:center">
-      <span id="globalStatus" class="badge neutral">Global: Unknown</span>
-      <button class="dark" onclick="logout()" style="padding:8px 12px;font-size:13px">Lock</button>
-    </div>
-  </div>
+<div id="app" class="app">
+  <div class="layout">
 
-  <div class="grid">
-    <div class="stat">
-      <div class="label">Subscription Status</div>
-      <div id="subStatusText" class="value">Not Loaded</div>
-    </div>
-    <div class="stat">
-      <div class="label">Node Count</div>
-      <div id="nodeCount" class="value">0</div>
-    </div>
-    <div class="stat">
-      <div class="label">Download Logs</div>
-      <div id="logCount" class="value">0</div>
-    </div>
-  </div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sb-brand">
+        <div class="sb-logo">S</div>
+        <div>
+          <div class="name">ShadowEscaper</div>
+          <div class="sub">Admin Console</div>
+        </div>
+      </div>
 
-  <div class="card">
-    <div class="controls">
-      <input id="apiBase" value="" placeholder="API Base">
-      <input id="subId" placeholder="Subscription shortId">
-    </div>
+      <nav class="nav">
+        <div class="nav-label">Manage</div>
+        <div class="nav-item active" onclick="goSection('subsView', this)"><span class="ico">📋</span> Subscriptions</div>
+        <div class="nav-item" onclick="goSection('detailView', this)"><span class="ico">🔍</span> Inspect</div>
+        <div class="nav-label">System</div>
+        <div class="nav-item" onclick="globalAllow()"><span class="ico">⚡</span> Allow All 5 Min</div>
+        <div class="nav-item" onclick="checkGlobalStatus()"><span class="ico">🔄</span> Global Status</div>
+      </nav>
 
-    <div class="actions">
-      <button class="load" onclick="loadInfo()">Load Info</button>
-      <button class="enable" onclick="toggleDownload(true)">Allow This Sub</button>
-      <button class="disable" onclick="toggleDownload(false)">Disable This Sub</button>
-      <button class="global" onclick="globalAllow()">Allow All 5 Min</button>
-      <button class="dark" onclick="checkGlobalStatus()">Check Global Status</button>
-      <button class="list-btn" onclick="listEnabledSubs()">View All Enabled Subs</button>
-    </div>
+      <div class="sb-foot">
+        <span id="globalStatus" class="badge neutral">Global: Unknown</span>
+        <button class="ghost" onclick="logout()">🔒 Lock console</button>
+      </div>
+    </aside>
 
-    <div class="section">
-      <div class="section-title">
-        <h2>Status</h2>
-        <div id="status"><span class="badge neutral">No subscription loaded</span></div>
-      </div>
-      <p id="meta" class="small"></p>
-    </div>
+    <!-- Main -->
+    <div class="main">
+      <header class="topbar">
+        <div>
+          <h1>Subscriptions</h1>
+          <div class="crumb">Manage subscription links, nodes & access</div>
+        </div>
+        <div class="topbar-right">
+          <div class="field apibase-field" style="min-width:240px">
+            <input id="apiBase" value="" placeholder="API Base">
+          </div>
+        </div>
+      </header>
 
-    <!-- Enabled Subs List -->
-    <div class="section" id="enabledSection" style="display:none">
-      <div class="section-title">
-        <h2>Enabled Subscriptions</h2>
-        <span id="enabledCount" class="badge neutral">0</span>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Short ID</th>
-              <th>Nodes</th>
-              <th>Created</th>
-              <th>Updated</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="enabledList"></tbody>
-        </table>
-      </div>
-    </div>
+      <div class="content">
 
-    <div class="section">
-      <div class="section-title">
-        <h2>Nodes</h2>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Server</th>
-              <th>Port</th>
-              <th>Host</th>
-              <th>SNI</th>
-            </tr>
-          </thead>
-          <tbody id="nodes"></tbody>
-        </table>
-      </div>
-    </div>
+        <!-- Stats -->
+        <div class="grid">
+          <div class="stat">
+            <div class="label"><span class="dot"></span> Loaded Sub</div>
+            <div id="subStatusText" class="value">—</div>
+          </div>
+          <div class="stat">
+            <div class="label"><span class="dot" style="background:var(--green)"></span> Node Count</div>
+            <div id="nodeCount" class="value">0</div>
+          </div>
+          <div class="stat">
+            <div class="label"><span class="dot" style="background:var(--amber)"></span> Download Logs</div>
+            <div id="logCount" class="value">0</div>
+          </div>
+          <div class="stat">
+            <div class="label"><span class="dot" style="background:var(--accent-2)"></span> Current Status</div>
+            <div id="status" class="value" style="font-size:15px;font-weight:600;margin-top:14px"><span class="badge neutral">Not loaded</span></div>
+          </div>
+        </div>
 
-    <div class="section">
-      <div class="section-title">
-        <h2>Download Logs</h2>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>IP</th>
-              <th>Target</th>
-              <th>User Agent</th>
-            </tr>
-          </thead>
-          <tbody id="logs"></tbody>
-        </table>
-      </div>
-    </div>
+        <!-- Lookup toolbar -->
+        <div class="card">
+          <div class="toolbar">
+            <div class="field">
+              <label for="subId">Subscription shortId</label>
+              <input id="subId" placeholder="e.g. a1b2c3d4e5">
+            </div>
+            <button class="load" onclick="loadInfo()">🔍 Load Info</button>
+            <button class="enable" onclick="toggleDownload(true)">Enable</button>
+            <button class="disable" onclick="toggleDownload(false)">Disable</button>
+          </div>
+          <div class="actions">
+            <button class="btn-primary" onclick="listSubs(false)">View All Subscriptions</button>
+            <button class="list-btn" onclick="listSubs(true)">Enabled Only</button>
+            <button class="global" onclick="globalAllow()">Allow All 5 Min</button>
+            <button class="dark" onclick="checkGlobalStatus()">Check Global Status</button>
+          </div>
+          <p id="meta" class="small" style="margin:14px 0 0"></p>
+        </div>
 
-    <div class="section">
-      <div class="section-title">
-        <h2>Raw Response</h2>
+        <!-- Subs List -->
+        <div class="card" id="subsView">
+          <div class="section" id="enabledSection">
+            <div class="section-title">
+              <h2 id="subsListTitle">All Subscriptions</h2>
+              <span id="enabledCount" class="badge neutral">0</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Short ID</th>
+                    <th>Status</th>
+                    <th>Nodes</th>
+                    <th>Created</th>
+                    <th>Updated</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="enabledList">
+                  <tr><td colspan="6" style="text-align:center;color:var(--faint)">Click “View All Subscriptions” to load.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detail view -->
+        <div id="detailView">
+          <div class="card" id="subLinksSection" style="display:none">
+            <div class="section-title">
+              <h2>Subscription Links</h2>
+            </div>
+            <div id="subLinks"></div>
+          </div>
+
+          <div class="card">
+            <div class="section-title">
+              <h2>Nodes</h2>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Server</th>
+                    <th>Port</th>
+                    <th>Host</th>
+                    <th>SNI</th>
+                    <th>Link</th>
+                  </tr>
+                </thead>
+                <tbody id="nodes"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title">
+              <h2>Download Logs</h2>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>IP</th>
+                    <th>Target</th>
+                    <th>User Agent</th>
+                  </tr>
+                </thead>
+                <tbody id="logs"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title">
+              <h2>Raw Response</h2>
+            </div>
+            <pre id="raw"></pre>
+          </div>
+        </div>
+
       </div>
-      <pre id="raw"></pre>
     </div>
   </div>
 </div>
@@ -372,11 +486,48 @@ function esc(s){
     .replaceAll('"',"&quot;");
 }
 
+function jsAttr(s){
+  // Safe JS string literal for use inside a double-quoted HTML attribute.
+  return esc(JSON.stringify(String(s ?? "")));
+}
+
+function renderSubLinks(urls){
+  const section = document.getElementById("subLinksSection");
+  const entries = Object.entries(urls || {});
+  if(!entries.length){
+    section.style.display = "none";
+    return;
+  }
+  section.style.display = "block";
+  document.getElementById("subLinks").innerHTML = entries.map(([label, link]) => `
+    <div class="link-row">
+      <span class="link-label">${esc(label)}</span>
+      <span class="link-text">${esc(link)}</span>
+      <button class="copy-uri" onclick="copyText(${jsAttr(link)})">Copy</button>
+    </div>
+  `).join("");
+}
+
 function toast(msg){
   const el = document.getElementById("toast");
   el.textContent = msg;
   el.style.display = "block";
   setTimeout(() => el.style.display = "none", 2600);
+}
+
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    toast("Copied to clipboard.");
+  }catch{
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try{ document.execCommand("copy"); toast("Copied to clipboard."); }
+    catch{ toast("Copy failed — select manually."); }
+    document.body.removeChild(ta);
+  }
 }
 
 async function readJson(res){
@@ -494,7 +645,11 @@ async function loadInfo(){
     document.getElementById("meta").textContent =
       `ID: ${data.id} · Created: ${data.createdAt || "N/A"} · Updated: ${data.updatedAt || "N/A"}`;
 
-    document.getElementById("nodes").innerHTML = (data.nodes || []).map(n => `
+    renderSubLinks(data.subscriptionUrls || {});
+
+    document.getElementById("nodes").innerHTML = (data.nodes || []).map(n => {
+      const orig = n.originalUri && n.originalUri !== n.uri;
+      return `
       <tr>
         <td>${esc(n.name)}</td>
         <td>${esc(n.type)}</td>
@@ -502,8 +657,14 @@ async function loadInfo(){
         <td>${esc(n.port)}</td>
         <td>${esc(n.host)}</td>
         <td>${esc(n.sni)}</td>
+        <td>
+          <div class="uri-cell">${esc(n.uri || "—")}</div>
+          ${n.uri ? `<button class="copy-uri" style="margin-top:6px" onclick="copyText(${jsAttr(n.uri)})">Copy Link</button>` : ""}
+          ${orig ? `<button class="copy-uri" style="margin-top:6px" onclick="copyText(${jsAttr(n.originalUri)})">Copy Original</button>` : ""}
+        </td>
       </tr>
-    `).join("");
+    `;
+    }).join("");
 
     document.getElementById("logs").innerHTML = (data.logs || []).map(l => `
       <tr>
@@ -590,13 +751,17 @@ async function checkGlobalStatus(){
   }catch(err){ alert(err.message); }
 }
 
-// ===== NEW: List all enabled subscriptions =====
-async function listEnabledSubs(){
+// ===== List subscriptions (all or enabled only) =====
+let lastListEnabledOnly = false;
+
+async function listSubs(enabledOnly){
   const {apiBase, token} = getConfig();
   if(!token){ alert("Missing token"); return; }
 
+  lastListEnabledOnly = !!enabledOnly;
+
   try{
-    const res = await fetch(apiBase + "/api/admin/sub/list?enabledOnly=true", {
+    const res = await fetch(apiBase + "/api/admin/sub/list?enabledOnly=" + (enabledOnly ? "true" : "false"), {
       method: "GET",
       headers: {"X-Admin-Token": token}
     });
@@ -605,31 +770,77 @@ async function listEnabledSubs(){
 
     const subs = data.subs || [];
     document.getElementById("enabledSection").style.display = "block";
-    document.getElementById("enabledCount").textContent = `${subs.length} enabled`;
+    document.getElementById("subsListTitle").textContent = enabledOnly ? "Enabled Subscriptions" : "All Subscriptions";
+    document.getElementById("enabledCount").textContent = `${subs.length} total`;
     document.getElementById("enabledCount").className = "badge " + (subs.length ? "on" : "neutral");
 
     document.getElementById("enabledList").innerHTML = subs.length
       ? subs.map(s => `
         <tr>
           <td><code>${esc(s.id)}</code></td>
+          <td>${s.downloadEnabled
+            ? '<span class="badge on">Enabled</span>'
+            : '<span class="badge off">Disabled</span>'}</td>
           <td>${esc(s.nodeCount)}</td>
           <td>${esc(s.createdAt || "—")}</td>
           <td>${esc(s.updatedAt || "—")}</td>
           <td>
-            <button class="link-btn" onclick="pickSub('${esc(s.id)}')">Inspect</button>
+            <button class="link-btn" onclick="pickSub(${jsAttr(s.id)})">Inspect</button>
+            <button class="link-btn danger" onclick="deleteSub(${jsAttr(s.id)})">Delete</button>
           </td>
         </tr>
       `).join("")
-      : `<tr><td colspan="5" style="text-align:center;color:var(--muted)">No enabled subscriptions.</td></tr>`;
+      : `<tr><td colspan="6" style="text-align:center;color:var(--muted)">No subscriptions found.</td></tr>`;
 
-    toast(`Found ${subs.length} enabled subscription(s).`);
+    toast(`Found ${subs.length} subscription(s).`);
+  }catch(err){ alert(err.message); }
+}
+
+async function deleteSub(id){
+  const {apiBase, token} = getConfig();
+  if(!token){ alert("Missing token"); return; }
+  if(!confirm(`Delete subscription "${id}"?\nThis removes the subscription link and all its download logs. This cannot be undone.`)) return;
+
+  try{
+    const res = await fetch(apiBase + "/api/admin/sub/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Admin-Token": token
+      },
+      body: JSON.stringify({ id })
+    });
+    const data = await readJson(res);
+    if(!data.ok){ alert(data.error || "Failed"); return; }
+
+    toast(`Deleted ${id} (logs: ${data.deletedLogs}, dedup: ${data.deletedDedup}).`);
+
+    // If the deleted sub was the one loaded, clear the detail view.
+    if(document.getElementById("subId").value.trim() === id){
+      document.getElementById("subId").value = "";
+      document.getElementById("nodes").innerHTML = "";
+      document.getElementById("logs").innerHTML = "";
+      document.getElementById("raw").textContent = "";
+      document.getElementById("subLinksSection").style.display = "none";
+      document.getElementById("status").innerHTML = '<span class="badge neutral">No subscription loaded</span>';
+    }
+
+    await listSubs(lastListEnabledOnly);
   }catch(err){ alert(err.message); }
 }
 
 function pickSub(id){
   document.getElementById("subId").value = id;
   loadInfo();
-  window.scrollTo({top:0, behavior:"smooth"});
+  const el = document.getElementById("detailView");
+  if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function goSection(targetId, navEl){
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  if(navEl) navEl.classList.add("active");
+  const el = document.getElementById(targetId);
+  if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
 }
 </script>
 
