@@ -1164,6 +1164,45 @@ async function handleCustomerDelete(request, env) {
   return json({ ok: true });
 }
 
+// ---- Memo / cheatsheet ----
+const MEMO_FIELDS = ["title", "category", "body", "pinned"];
+
+async function handleMemoData(request, env) {
+  if (!checkAdmin(request, env)) return json({ ok: false, error: "Forbidden" }, 403);
+  const missing = requireDb(env); if (missing) return missing;
+  const memos = (await env.DB.prepare(
+    "SELECT * FROM memos ORDER BY pinned DESC, category COLLATE NOCASE, id"
+  ).all()).results || [];
+  return json({ ok: true, memos });
+}
+
+async function handleMemoUpsert(request, env) {
+  if (!checkAdmin(request, env)) return json({ ok: false, error: "Forbidden" }, 403);
+  const missing = requireDb(env); if (missing) return missing;
+  const b = await readJsonBody(request);
+  const vals = MEMO_FIELDS.map(k => k === "pinned" ? (b[k] ? 1 : 0) : cleanField(b[k]));
+  const id = b.id ? parseInt(b.id, 10) : null;
+  if (id) {
+    const sets = MEMO_FIELDS.map(k => `${k} = ?`).join(", ");
+    await env.DB.prepare(`UPDATE memos SET ${sets} WHERE id = ?`).bind(...vals, id).run();
+    return json({ ok: true, id });
+  }
+  const cols = MEMO_FIELDS.join(", ");
+  const ph = MEMO_FIELDS.map(() => "?").join(", ");
+  const res = await env.DB.prepare(`INSERT INTO memos (${cols}) VALUES (${ph})`).bind(...vals).run();
+  return json({ ok: true, id: res.meta.last_row_id });
+}
+
+async function handleMemoDelete(request, env) {
+  if (!checkAdmin(request, env)) return json({ ok: false, error: "Forbidden" }, 403);
+  const missing = requireDb(env); if (missing) return missing;
+  const b = await readJsonBody(request);
+  const id = parseInt(b.id, 10);
+  if (!Number.isInteger(id)) return json({ ok: false, error: "Missing id" }, 400);
+  await env.DB.prepare("DELETE FROM memos WHERE id = ?").bind(id).run();
+  return json({ ok: true });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -1235,6 +1274,15 @@ export default {
     }
     if (request.method === "POST" && url.pathname === "/api/admin/customer/delete") {
       return handleCustomerDelete(request, env);
+    }
+    if (request.method === "GET" && url.pathname === "/api/admin/memo/data") {
+      return handleMemoData(request, env);
+    }
+    if (request.method === "POST" && url.pathname === "/api/admin/memo/upsert") {
+      return handleMemoUpsert(request, env);
+    }
+    if (request.method === "POST" && url.pathname === "/api/admin/memo/delete") {
+      return handleMemoDelete(request, env);
     }
 
     if (request.method === "GET" && url.pathname.startsWith("/sub/")) {

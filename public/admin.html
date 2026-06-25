@@ -368,6 +368,33 @@ pre{
 #vpsArea .v-kv .vv.blur:hover{filter:none}
 @media(max-width:760px){#vpsArea .v-g2,#vpsArea .v-g3{grid-template-columns:1fr}#vpsArea .v-stats{grid-template-columns:repeat(2,1fr)}}
 
+/* ===== Memo / cheatsheet area (orange Claude, reuses v-* look) ===== */
+#memoArea .memo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+#memoArea .memo-card{background:var(--panel);backdrop-filter:saturate(160%) blur(20px);-webkit-backdrop-filter:saturate(160%) blur(20px);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:15px 16px;box-shadow:0 10px 30px -14px rgba(28,40,90,.16);display:flex;flex-direction:column;gap:9px}
+#memoArea .memo-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+#memoArea .memo-title{font-size:15px;font-weight:700;letter-spacing:-.01em}
+#memoArea .memo-cat{flex-shrink:0;font-size:11px;font-weight:600;padding:3px 9px;border-radius:980px;background:rgba(232,98,58,.12);color:var(--accent-2)}
+#memoArea .memo-body{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;white-space:pre-wrap;word-break:break-all;background:rgba(0,0,0,.045);border:1px solid rgba(0,0,0,.06);border-radius:10px;padding:10px 12px;color:var(--text);line-height:1.55}
+#memoArea .memo-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+#memoArea .v-empty{text-align:center;color:var(--faint);padding:30px 0;font-size:13.5px}
+#memoArea .v-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:600;font-size:13px;padding:8px 14px;border-radius:980px;border:1px solid transparent;cursor:pointer;color:var(--text);background:transparent;font-family:inherit;transition:.15s}
+#memoArea .v-btn:active{transform:scale(.97)}
+#memoArea .v-btn-primary{color:#fff;background:linear-gradient(180deg,#f07a55,var(--accent));box-shadow:0 6px 16px -5px rgba(232,98,58,.5)}
+#memoArea .v-btn-glass{background:linear-gradient(150deg,rgba(255,255,255,.9),rgba(255,255,255,.72));border:1px solid rgba(255,255,255,.75);box-shadow:0 6px 18px -10px rgba(28,40,90,.18)}
+#memoArea .v-btn-ghost{border:1px solid var(--border);background:rgba(255,255,255,.55)}
+#memoArea .v-btn-danger{color:var(--red);border:1px solid rgba(213,64,43,.3);background:rgba(213,64,43,.06)}
+#memoArea .v-btn-sm{font-size:12px;padding:6px 11px}
+#memoArea .v-overlay{position:fixed;inset:0;z-index:9500;background:rgba(20,18,28,.4);backdrop-filter:blur(4px);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+#memoArea .v-modal{width:100%;max-width:560px;border-radius:22px;background:linear-gradient(150deg,rgba(255,255,255,.97),rgba(255,255,255,.92));border:1px solid rgba(255,255,255,.8);box-shadow:0 30px 80px -20px rgba(20,20,50,.4);padding:24px;color:var(--text)}
+#memoArea .v-modal h3{font-size:19px;margin:0 0 2px}
+#memoArea .v-msub{font-size:12.5px;color:var(--faint);margin-bottom:16px}
+#memoArea .v-f{margin-bottom:12px}
+#memoArea .v-f label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:none;letter-spacing:0}
+#memoArea .v-f input,#memoArea .v-f textarea{width:100%;font-family:inherit;font-size:13.5px;color:var(--text);padding:9px 12px;border-radius:11px;border:1px solid var(--border);background:rgba(255,255,255,.85)}
+#memoArea .v-f input:focus,#memoArea .v-f textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,98,58,.15)}
+#memoArea .v-f textarea{resize:vertical;min-height:96px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
+#memoArea .v-modal-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+
 @media(max-width:920px){
   .grid{grid-template-columns:repeat(2,1fr)}
 }
@@ -423,6 +450,8 @@ pre{
         <div class="nav-label">VPS</div>
         <div class="nav-item" onclick="showArea('vps','VPS Servers','Servers, panel logins & regions','vGridCard',this)"><span class="ico">🖥️</span> VPS Servers</div>
         <div class="nav-item" onclick="showArea('vps','Customers','Who is on which server, type & expiry','vCustCard',this)"><span class="ico">👤</span> Customers</div>
+        <div class="nav-label">Reference</div>
+        <div class="nav-item" onclick="showArea('memo','Memo','Quick commands & easily-forgotten things','memoCard',this)"><span class="ico">📝</span> Memo</div>
         <div class="nav-label">System</div>
         <div class="nav-item" onclick="globalAllow()"><span class="ico">⚡</span> Allow All 5 Min</div>
         <div class="nav-item" onclick="checkGlobalStatus()"><span class="ico">🔄</span> Global Status</div>
@@ -603,6 +632,18 @@ pre{
           </div>
 
           <div id="vModalRoot"></div>
+        </div>
+
+        <!-- ===== Memo / cheatsheet area ===== -->
+        <div id="memoArea" style="display:none">
+          <div id="memoCard">
+            <div class="v-head">
+              <div><h2>Memo</h2><div class="sub" id="memoSub">Quick commands & easily-forgotten things</div></div>
+              <button class="v-btn v-btn-glass" onclick="mOpen()">+ Add note</button>
+            </div>
+            <div class="memo-grid" id="memoGrid"></div>
+          </div>
+          <div id="mModalRoot"></div>
         </div>
 
       </div>
@@ -984,21 +1025,19 @@ function goSection(targetId, navEl){
  *  Area switching (Subscriptions <-> VPS)
  * ============================================================ */
 let vpsLoaded = false;
+let memoLoaded = false;
 function showArea(area, title, crumb, scrollId, navEl){
   document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
   if(navEl) navEl.classList.add("active");
   document.getElementById("pageTitle").textContent = title;
   document.getElementById("pageCrumb").textContent = crumb;
-  const subs = document.getElementById("subsArea");
-  const vps  = document.getElementById("vpsArea");
-  if(area === "vps"){
-    subs.style.display = "none";
-    vps.style.display = "block";
-    if(!vpsLoaded){ vpsLoaded = true; vLoad(); }
-  } else {
-    vps.style.display = "none";
-    subs.style.display = "block";
-  }
+  const areas = {subs:"subsArea", vps:"vpsArea", memo:"memoArea"};
+  Object.keys(areas).forEach(k => {
+    const el = document.getElementById(areas[k]);
+    if(el) el.style.display = (k === area) ? "block" : "none";
+  });
+  if(area === "vps"  && !vpsLoaded){ vpsLoaded = true; vLoad(); }
+  if(area === "memo" && !memoLoaded){ memoLoaded = true; mLoad(); }
   const el = document.getElementById(scrollId);
   if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
 }
@@ -1266,6 +1305,76 @@ async function vDelCust(id){
 }
 
 document.addEventListener("keydown", e => { if(e.key === "Escape") vCloseModal(); });
+
+/* ============================================================ *
+ *  Memo / cheatsheet (D1 via /api/admin/memo/*, X-Admin-Token)
+ *  Reuses vApi(), esc(), jsAttr(), toast(), copyText().
+ * ============================================================ */
+const MSTATE = {memos:[]};
+const M_CATS = ["Terminal","SSH","Panel","Cloudflare","Misc"];
+
+async function mLoad(){
+  try{
+    const d = await vApi("GET", "/api/admin/memo/data");
+    MSTATE.memos = d.memos || [];
+    mRender();
+  }catch(e){ /* toast already shown */ }
+}
+
+function mRender(){
+  const grid = document.getElementById("memoGrid");
+  if(!MSTATE.memos.length){ grid.innerHTML = '<div class="v-empty">No notes yet. Click “+ Add note” to save a command or reminder.</div>'; return; }
+  grid.innerHTML = MSTATE.memos.map(m => {
+    const cat = m.category ? `<span class="memo-cat">${esc(m.category)}</span>` : "";
+    const pin = m.pinned ? "📌 " : "";
+    return `<div class="memo-card">
+      <div class="memo-top"><div class="memo-title">${pin}${esc(m.title || "(untitled)")}</div>${cat}</div>
+      ${m.body ? `<div class="memo-body">${esc(m.body)}</div>` : ""}
+      <div class="memo-actions">
+        ${m.body ? `<button class="v-btn v-btn-glass v-btn-sm" onclick="copyText(${jsAttr(m.body)})">Copy</button>` : ""}
+        <button class="v-btn v-btn-ghost v-btn-sm" onclick="mOpen(${m.id})">Edit</button>
+        <button class="v-btn v-btn-danger v-btn-sm" onclick="mDel(${m.id})">Del</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function mClose(){ document.getElementById("mModalRoot").innerHTML = ""; }
+
+function mOpen(id){
+  const m = (id ? MSTATE.memos.find(x => x.id === id) : {}) || {};
+  const list = M_CATS.map(c => `<option value="${c}">`).join("");
+  const html = `<div class="v-overlay" onclick="if(event.target===this)mClose()"><div class="v-modal">
+    <h3>${id ? "Edit note" : "Add note"}</h3><div class="v-msub">A title, optional category, and the command or note</div>
+    <div class="v-f"><label>Title</label><input id="m_title" value="${esc(m.title ?? "")}" placeholder="e.g. Chrome — ignore cert errors"></div>
+    <div class="v-f"><label>Category</label><input id="m_category" list="mCatList" value="${esc(m.category ?? "")}" placeholder="Terminal"><datalist id="mCatList">${list}</datalist></div>
+    <div class="v-f"><label>Body (command / note)</label><textarea id="m_body" placeholder="Paste the command or note here…">${esc(m.body ?? "")}</textarea></div>
+    <div class="v-f" style="display:flex;align-items:center;gap:8px;margin-top:14px"><input type="checkbox" id="m_pinned" ${m.pinned ? "checked" : ""} style="width:auto"> <label for="m_pinned" style="margin:0">Pin to top</label></div>
+    <div class="v-modal-foot"><button class="v-btn v-btn-ghost" onclick="mClose()">Cancel</button>
+    <button class="v-btn v-btn-primary" onclick="mSave(${id || ""})">${id ? "Save changes" : "Add note"}</button></div>
+  </div></div>`;
+  document.getElementById("mModalRoot").innerHTML = html;
+}
+
+async function mSave(id){
+  const data = {
+    title: document.getElementById("m_title").value.trim(),
+    category: document.getElementById("m_category").value.trim(),
+    body: document.getElementById("m_body").value,
+    pinned: document.getElementById("m_pinned").checked ? 1 : 0
+  };
+  if(!data.title && !data.body){ toast("Add a title or body."); return; }
+  if(id) data.id = id;
+  try{ await vApi("POST", "/api/admin/memo/upsert", data); toast(id ? "Note saved." : "Note added."); mClose(); await mLoad(); }catch(e){}
+}
+
+async function mDel(id){
+  const m = MSTATE.memos.find(x => x.id === id);
+  if(!confirm(`Delete note ${m ? '"'+m.title+'"' : ""}?`)) return;
+  try{ await vApi("POST", "/api/admin/memo/delete", {id}); toast("Note deleted."); await mLoad(); }catch(e){}
+}
+
+document.addEventListener("keydown", e => { if(e.key === "Escape") mClose(); });
 </script>
 
 </body>
