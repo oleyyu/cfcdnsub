@@ -117,6 +117,8 @@ a URI with `renderNodeUri(node)` from `core.js`.
 - `customers` — `id`, `name`, `contact`, `vps_id` (FK → vps, `ON DELETE SET NULL`),
   `service_type`, `region`, `start_date`, `expiry_date`, `price`, `currency`,
   `status` (active/paused/cancelled), `notes`, `created_at`.
+- `memos` — `id`, `title`, `category`, `body` (command/note), `pinned` (0/1),
+  `created_at`. Admin cheatsheet for quick-launch commands & reminders.
 
 Upserts write the full column set (the client always sends every field), so a
 partial POST will null unspecified columns — send all fields on update.
@@ -139,13 +141,21 @@ Admin — VPS inventory (D1, also `checkAdmin`-gated):
 - `POST /api/admin/vps/delete` — delete a VPS, unlinks its customers (`vps_id = NULL`)
 - `POST /api/admin/customer/upsert` · `/api/admin/customer/delete`
 
+Admin — memo / cheatsheet (D1, also `checkAdmin`-gated):
+- `GET  /api/admin/memo/data` — all memos
+- `POST /api/admin/memo/upsert` — create (no `id`) or update (`id`)
+- `POST /api/admin/memo/delete`
+
 ## Admin console (`admin.html`)
 
-One self-contained file. A sidebar (`showArea()`) toggles two content areas:
-the **Subscriptions** UI (`#subsArea`) and the **VPS/Customers** console
-(`#vpsArea`). VPS JS helpers are prefixed `v*` and reuse `adminToken` +
-`#apiBase` like the rest. The VPS area's component CSS is scoped under
-`#vpsArea` (`.v-*` classes) so it stays self-contained.
+One self-contained file. A sidebar (`showArea()`) toggles three content areas:
+the **Subscriptions** UI (`#subsArea`), the **VPS/Customers** console
+(`#vpsArea`), and the **Memo** cheatsheet (`#memoArea`). VPS helpers are
+prefixed `v*`, memo helpers `m*`; both reuse `vApi()` (which sends
+`X-Admin-Token` from `adminToken` + `#apiBase`), plus `esc()` / `jsAttr()` /
+`toast()` / `copyText()`. The VPS area's component CSS is scoped under
+`#vpsArea` (`.v-*` classes); the Memo area re-declares the same `v-*` look
+under `#memoArea`.
 
 ## Theme — orange "Claude" glass (whole project)
 
