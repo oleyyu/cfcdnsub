@@ -2,37 +2,36 @@
    Main-site warm glass theme */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
   --serif: "Newsreader", "Noto Serif SC", Georgia, serif;
   --sans: "Manrope", "Noto Sans SC", system-ui, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --fg: #f6f1e8;
-  --fg-mute: #c6bdae;
-  --fg-dim: #8a8276;
-  --accent-red: #eb5757;
-  --accent-red-deep: #c43c3c;
-  --accent-soft: #f59595;
-  --accent-glow: rgba(235, 87, 87, 0.45);
-  --line: rgba(255, 243, 225, 0.13);
-  --line-soft: rgba(255, 243, 225, 0.08);
+  --fg: #1d1d1f;
+  --fg-mute: #5d5d63;
+  --fg-dim: #86868b;
+  --accent-red: #E8623A;
+  --accent-red-deep: #C54E2A;
+  --accent-soft: #C54E2A;
+  --accent-glow: rgba(232, 98, 58, 0.4);
+  --line: rgba(0, 0, 0, 0.10);
+  --line-soft: rgba(0, 0, 0, 0.06);
 
   /* Aliases used by the app */
-  --bg: #0c0606;
-  --card: rgba(255, 243, 225, 0.055);
+  --bg: #f6f2ed;
+  --card: rgba(255, 255, 255, 0.72);
   --text: var(--fg);
   --muted: var(--fg-mute);
   --accent: var(--accent-red);
   --accent-2: var(--accent-soft);
-  --warning: #f5b942;
-  --danger: #ff7a8a;
+  --warning: #d98a16;
+  --danger: #d5402b;
 
   --shadow-glass:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
-    0 30px 80px -22px rgba(0, 0, 0, 0.55),
-    0 6px 24px -10px rgba(0, 0, 0, 0.4);
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 30px 80px -22px rgba(28, 40, 90, 0.16),
+    0 6px 24px -10px rgba(28, 40, 90, 0.12);
 }
 
 * {
@@ -57,7 +56,7 @@ body {
   line-height: 1.5;
   letter-spacing: 0;
 
-  background: #0c0606;
+  background: #f6f2ed;
 }
 
 body::before {
@@ -66,9 +65,10 @@ body::before {
   inset: 0;
   z-index: -2;
   background:
-    radial-gradient(ellipse 80% 60% at 75% 10%, rgba(235, 87, 87, 0.32), transparent 60%),
-    radial-gradient(ellipse 90% 70% at 10% 90%, rgba(20, 8, 10, 0.7), transparent 65%),
-    linear-gradient(135deg, #1a0a0a 0%, #0c0606 50%, #000000 100%);
+    radial-gradient(620px 480px at 14% 4%, rgba(255, 180, 140, 0.34), transparent 60%),
+    radial-gradient(680px 520px at 86% 0%, rgba(255, 160, 120, 0.26), transparent 58%),
+    radial-gradient(720px 600px at 80% 74%, rgba(255, 210, 160, 0.24), transparent 60%),
+    linear-gradient(180deg, #f9f5f2 0%, #f6f2ed 100%);
   pointer-events: none;
 }
 
@@ -78,18 +78,18 @@ body::after {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.4;
-  mix-blend-mode: overlay;
+  opacity: 0.22;
+  mix-blend-mode: soft-light;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
 code {
   font-family: var(--mono);
-  background: rgba(255, 243, 225, 0.08);
+  background: rgba(0, 0, 0, 0.05);
   padding: 0.1em 0.4em;
   border-radius: 6px;
   font-size: 0.92em;
-  border: 1px solid rgba(255, 243, 225, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.10);
 }
 
 a {
@@ -99,7 +99,7 @@ a {
 }
 
 a:hover {
-  color: #fff;
+  color: var(--accent-red-deep);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -137,8 +137,8 @@ a:hover {
     rgba(255, 255, 255, 0.18) 0%,
     rgba(255, 255, 255, 0) 35%,
     rgba(255, 255, 255, 0) 65%,
-    rgba(255, 243, 225, 0.06) 100%);
-  mix-blend-mode: overlay;
+    rgba(0, 0, 0, 0.04) 100%);
+  mix-blend-mode: soft-light;
 }
 
 /* Make sure card content sits above the rim-light overlay */
@@ -172,7 +172,7 @@ p {
   gap: 8px;
   padding: 6px 14px;
   border-radius: 999px;
-  background: rgba(255, 243, 225, 0.07);
+  background: rgba(232, 98, 58, 0.10);
   border: 1px solid var(--line);
   font-size: 12px;
   font-weight: 600;
@@ -196,7 +196,7 @@ p {
 }
 
 .hero-title span {
-  background: linear-gradient(135deg, #f59595 0%, #eb5757 72%, #7a1a1a 100%);
+  background: linear-gradient(135deg, #f07a55 0%, #E8623A 72%, #C54E2A 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -222,8 +222,8 @@ p {
   align-self: start;
   padding: 22px;
   border-radius: 18px;
-  background: rgba(235, 87, 87, 0.08);
-  border: 1px solid rgba(235, 87, 87, 0.22);
+  background: rgba(232, 98, 58, 0.08);
+  border: 1px solid rgba(232, 98, 58, 0.22);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
     0 8px 24px rgba(0, 0, 0, 0.18);
@@ -298,7 +298,7 @@ input[readonly] {
   width: 100%;
   border-radius: 14px;
   border: 1px solid var(--line);
-  background: rgba(12, 6, 6, 0.52);
+  background: rgba(255, 255, 255, 0.7);
   color: var(--text);
   padding: 14px 16px;
   font-size: 0.96rem;
@@ -315,15 +315,15 @@ textarea {
 
 textarea::placeholder,
 input::placeholder {
-  color: rgba(246, 241, 232, 0.34);
+  color: rgba(0, 0, 0, 0.34);
 }
 
 textarea:focus,
 input[type="text"]:focus,
 input[readonly]:focus {
-  border-color: rgba(235, 87, 87, 0.62);
-  box-shadow: 0 0 0 4px rgba(235, 87, 87, 0.16);
-  background: rgba(12, 6, 6, 0.72);
+  border-color: rgba(232, 98, 58, 0.62);
+  box-shadow: 0 0 0 4px rgba(232, 98, 58, 0.16);
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .hint {
@@ -342,7 +342,7 @@ input[readonly]:focus {
   padding: 12px 16px;
   border-radius: 14px;
   border: 1px solid var(--line);
-  background: rgba(255, 243, 225, 0.045);
+  background: rgba(255, 255, 255, 0.66);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -380,13 +380,13 @@ button {
   letter-spacing: 0;
   cursor: pointer;
   font-family: inherit;
-  color: #fff8f6;
-  background: linear-gradient(135deg, #eb5757 0%, #b32d2d 70%, #1a0606 100%);
+  color: #fff;
+  background: linear-gradient(180deg, #f07a55 0%, #E8623A 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.30),
     inset 0 -1px 0 rgba(0, 0, 0, 0.40),
-    0 14px 30px -6px rgba(235, 87, 87, 0.45),
-    0 0 0 1px rgba(235, 87, 87, 0.30);
+    0 14px 30px -6px rgba(232, 98, 58, 0.45),
+    0 0 0 1px rgba(232, 98, 58, 0.30);
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
   transition: transform .2s ease, background .2s, box-shadow .2s, opacity .2s;
 }
@@ -408,7 +408,7 @@ button:disabled {
 }
 
 button.secondary {
-  background: rgba(255, 243, 225, 0.075);
+  background: rgba(255, 255, 255, 0.7);
   color: var(--fg);
   border: 1px solid var(--line);
   backdrop-filter: blur(20px) saturate(180%);
@@ -419,8 +419,8 @@ button.secondary {
 }
 
 button.secondary:hover {
-  background: rgba(255, 243, 225, 0.12);
-  border-color: rgba(255, 243, 225, 0.24);
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.14);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
     0 6px 20px rgba(0, 0, 0, 0.22);
@@ -465,8 +465,8 @@ button.small {
 .client-box {
   padding: 18px;
   border-radius: 16px;
-  background: rgba(235, 87, 87, 0.08);
-  border: 1px solid rgba(235, 87, 87, 0.2);
+  background: rgba(232, 98, 58, 0.08);
+  border: 1px solid rgba(232, 98, 58, 0.2);
 }
 
 .client-box h3 {
@@ -520,8 +520,8 @@ button.small {
 .empty-state {
   padding: 18px 20px;
   border-radius: 16px;
-  background: rgba(235, 87, 87, 0.08);
-  border: 1px solid rgba(235, 87, 87, 0.2);
+  background: rgba(232, 98, 58, 0.08);
+  border: 1px solid rgba(232, 98, 58, 0.2);
   color: var(--fg-mute);
   line-height: 1.7;
   font-size: 0.94rem;
@@ -530,9 +530,9 @@ button.small {
 .warning {
   padding: 16px 18px;
   border-radius: 14px;
-  background: rgba(245, 185, 66, 0.1);
-  border: 1px solid rgba(245, 185, 66, 0.24);
-  color: #ffe7a8;
+  background: rgba(217, 138, 22, 0.12);
+  border: 1px solid rgba(217, 138, 22, 0.3);
+  color: #9a6a12;
   line-height: 1.7;
   white-space: pre-wrap;
   font-size: 0.94rem;
@@ -555,7 +555,7 @@ button.small {
   padding: 20px;
   border-radius: 18px;
   border: 1px solid var(--line);
-  background: rgba(255, 243, 225, 0.045);
+  background: rgba(255, 255, 255, 0.66);
   backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   box-shadow:
@@ -579,7 +579,7 @@ button.small {
   font-weight: 800;
   letter-spacing: 0;
   line-height: 1;
-  background: linear-gradient(135deg, #f59595 0%, #eb5757 70%, #7a1a1a 100%);
+  background: linear-gradient(135deg, #f07a55 0%, #E8623A 70%, #C54E2A 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -599,7 +599,7 @@ button.small {
   padding: 22px;
   border-radius: 20px;
   border: 1px solid var(--line);
-  background: rgba(255, 243, 225, 0.045);
+  background: rgba(255, 255, 255, 0.66);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   box-shadow:
@@ -610,7 +610,7 @@ button.small {
 
 .sub-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 243, 225, 0.24);
+  border-color: rgba(0, 0, 0, 0.14);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
     0 12px 32px rgba(0, 0, 0, 0.24);
@@ -637,8 +637,8 @@ button.small {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(235, 87, 87, 0.16);
-  border: 1px solid rgba(235, 87, 87, 0.26);
+  background: rgba(232, 98, 58, 0.16);
+  border: 1px solid rgba(232, 98, 58, 0.26);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
   flex-shrink: 0;
 }
@@ -697,7 +697,7 @@ button.small {
   overflow-x: auto;
   border-radius: 16px;
   border: 1px solid var(--line-soft);
-  background: rgba(12, 6, 6, 0.42);
+  background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -719,7 +719,7 @@ button.small {
 
 .table-wrap th {
   color: var(--accent-soft);
-  background: rgba(255, 243, 225, 0.045);
+  background: rgba(0, 0, 0, 0.04);
   font-size: 0.74rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -735,7 +735,7 @@ button.small {
 }
 
 .table-wrap tr:hover td {
-  background: rgba(255, 243, 225, 0.035);
+  background: rgba(0, 0, 0, 0.03);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -755,7 +755,7 @@ button.small {
 .modal-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(12, 6, 6, 0.66);
+  background: rgba(20, 18, 28, 0.45);
   backdrop-filter: blur(10px) saturate(140%);
   -webkit-backdrop-filter: blur(10px) saturate(140%);
 }
@@ -766,7 +766,7 @@ button.small {
   margin: 8vh auto 0;
   padding: 26px;
   border-radius: 24px;
-  background: rgba(20, 8, 8, 0.86);
+  background: rgba(255, 255, 255, 0.95);
   border: 1px solid var(--line);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
