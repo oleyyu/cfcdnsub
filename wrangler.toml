@@ -19,3 +19,9 @@ run_worker_first = true
 [[kv_namespaces]]
 binding = "SUB_STORE"
 id = "accd8ed107f74dcc925eda758ad66498"
+
+# VPS inventory + customers (shared with the standalone vps-admin Worker)
+[[d1_databases]]
+binding = "DB"
+database_name = "vps-admin-db"
+database_id = "c96a2fba-e8d2-424e-a166-6c6a356b26dd"

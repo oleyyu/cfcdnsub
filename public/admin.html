@@ -264,6 +264,95 @@ pre{
 .lock-error{color:#fca5a5;font-size:12.5px;min-height:18px;margin-bottom:8px}
 .app{display:none}
 
+/* ============================================================ *
+ *  VPS area — orange "Claude" glass theme, scoped to #vpsArea
+ * ============================================================ */
+#vpsArea{
+  --o-accent:#E8623A; --o-accent-press:#C54E2A;
+  --o-green:#1d9d57; --o-amber:#d98a16; --o-red:#d5402b;
+  --o-ink:#1d1d1f; --o-muted:#5d5d63; --o-faint:#86868b;
+  --o-line:rgba(0,0,0,.10); --o-line-soft:rgba(0,0,0,.06);
+  --o-glass:linear-gradient(150deg,rgba(255,255,255,.9),rgba(255,255,255,.72));
+  background:linear-gradient(180deg,#faf6f3,#f5f0ea);
+  border:1px solid rgba(0,0,0,.06);
+  border-radius:18px;padding:22px 22px 26px;color:var(--o-ink);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+}
+#vpsArea h2{color:var(--o-ink)}
+#vpsArea .v-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+#vpsArea .v-head .sub{font-size:12.5px;color:var(--o-faint);font-weight:500;margin-top:2px}
+#vpsArea .v-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px}
+#vpsArea .v-stat{background:var(--o-glass);border:1px solid rgba(255,255,255,.7);border-radius:15px;padding:15px 16px;box-shadow:0 8px 26px -12px rgba(28,40,90,.16)}
+#vpsArea .v-stat .k{font-size:12px;font-weight:600;color:var(--o-faint)}
+#vpsArea .v-stat .v{font-size:27px;font-weight:650;letter-spacing:-.03em;margin-top:3px;font-variant-numeric:tabular-nums;color:var(--o-ink)}
+#vpsArea .v-stat.warn .v{color:var(--o-amber)} #vpsArea .v-stat.bad .v{color:var(--o-red)} #vpsArea .v-stat.good .v{color:var(--o-green)}
+
+#vpsArea .v-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:600;font-size:13px;padding:8px 14px;border-radius:980px;border:1px solid transparent;cursor:pointer;transition:.15s;color:var(--o-ink);background:transparent;font-family:inherit}
+#vpsArea .v-btn:active{transform:scale(.97)}
+#vpsArea .v-btn-primary{color:#fff;background:linear-gradient(180deg,#f07a55,var(--o-accent));box-shadow:0 6px 16px -5px rgba(232,98,58,.55)}
+#vpsArea .v-btn-primary:hover{background:linear-gradient(180deg,#e96840,var(--o-accent-press));opacity:1}
+#vpsArea .v-btn-glass{background:var(--o-glass);border:1px solid rgba(255,255,255,.75);box-shadow:0 6px 18px -10px rgba(28,40,90,.18)}
+#vpsArea .v-btn-glass:hover{background:#fff;opacity:1}
+#vpsArea .v-btn-ghost{border:1px solid var(--o-line);background:rgba(255,255,255,.55)}
+#vpsArea .v-btn-ghost:hover{background:#fff;opacity:1}
+#vpsArea .v-btn-danger{color:var(--o-red);border:1px solid rgba(213,64,43,.3);background:rgba(213,64,43,.06)}
+#vpsArea .v-btn-danger:hover{background:rgba(213,64,43,.12);opacity:1}
+#vpsArea .v-btn-sm{font-size:12px;padding:6px 11px}
+
+#vpsArea .v-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:13px}
+#vpsArea .v-card{border-radius:16px;padding:15px;background:var(--o-glass);border:1px solid rgba(255,255,255,.7);box-shadow:0 8px 26px -12px rgba(28,40,90,.16);display:flex;flex-direction:column;gap:9px;transition:transform .12s}
+#vpsArea .v-card:hover{transform:translateY(-2px)}
+#vpsArea .v-card.sel{outline:2px solid var(--o-accent);outline-offset:1px}
+#vpsArea .v-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+#vpsArea .v-card-title{font-size:15.5px;font-weight:650}
+#vpsArea .v-rows{font-size:12.5px;color:var(--o-muted);display:flex;flex-direction:column;gap:2px}
+#vpsArea .v-rows .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--o-ink)}
+#vpsArea .v-foot{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px}
+#vpsArea .v-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:980px;background:rgba(0,0,0,.055);color:var(--o-muted)}
+#vpsArea .v-chip.accent{background:rgba(232,98,58,.13);color:var(--o-accent-press)}
+#vpsArea .v-chip.amber{background:rgba(217,138,22,.16);color:var(--o-amber)}
+#vpsArea .v-chip.red{background:rgba(213,64,43,.13);color:var(--o-red)}
+
+#vpsArea .v-table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--o-line-soft);background:var(--o-glass)}
+#vpsArea table{width:100%;border-collapse:collapse;min-width:760px}
+#vpsArea th{text-align:left;font-size:11px;font-weight:600;color:var(--o-faint);text-transform:uppercase;letter-spacing:.04em;padding:9px 13px;border-bottom:1px solid var(--o-line);background:transparent}
+#vpsArea td{padding:11px 13px;border-bottom:1px solid var(--o-line-soft);vertical-align:middle;font-size:13px;color:var(--o-ink)}
+#vpsArea tbody tr:last-child td{border-bottom:none}
+#vpsArea tbody tr:hover td{background:rgba(255,255,255,.6)}
+#vpsArea .v-cust-name{font-weight:650}
+#vpsArea .v-muted{color:var(--o-faint)}
+#vpsArea .v-empty{text-align:center;color:var(--o-faint);padding:30px 0;font-size:13.5px}
+#vpsArea .v-row-actions{display:flex;gap:6px;justify-content:flex-end}
+
+#vpsArea .v-badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:980px}
+#vpsArea .v-badge.green{background:rgba(29,157,87,.13);color:var(--o-green)}
+#vpsArea .v-badge.amber{background:rgba(217,138,22,.16);color:var(--o-amber)}
+#vpsArea .v-badge.red{background:rgba(213,64,43,.13);color:var(--o-red)}
+#vpsArea .v-badge.gray{background:rgba(0,0,0,.07);color:var(--o-faint)}
+
+/* modal (fixed overlay; scoped styling) */
+#vpsArea .v-overlay{position:fixed;inset:0;z-index:9500;background:rgba(20,18,28,.4);backdrop-filter:blur(4px);display:flex;align-items:flex-start;justify-content:center;padding:36px 16px;overflow-y:auto}
+#vpsArea .v-modal{width:100%;max-width:640px;border-radius:22px;background:linear-gradient(150deg,rgba(255,255,255,.97),rgba(255,255,255,.92));border:1px solid rgba(255,255,255,.8);box-shadow:0 30px 80px -20px rgba(20,20,50,.5);padding:24px;color:var(--o-ink)}
+#vpsArea .v-modal h3{font-size:19px;margin:0 0 2px;color:var(--o-ink)}
+#vpsArea .v-modal .v-msub{font-size:12.5px;color:var(--o-faint);margin-bottom:16px}
+#vpsArea .v-f{margin-bottom:12px}
+#vpsArea .v-f label{display:block;font-size:12px;font-weight:600;color:var(--o-muted);margin-bottom:5px;text-transform:none;letter-spacing:0}
+#vpsArea .v-f input,#vpsArea .v-f select,#vpsArea .v-f textarea{width:100%;font-family:inherit;font-size:13.5px;color:var(--o-ink);padding:9px 12px;border-radius:11px;border:1px solid var(--o-line);background:rgba(255,255,255,.85)}
+#vpsArea .v-f input:focus,#vpsArea .v-f select:focus,#vpsArea .v-f textarea:focus{outline:none;border-color:var(--o-accent);box-shadow:0 0 0 3px rgba(232,98,58,.15)}
+#vpsArea .v-f textarea{resize:vertical;min-height:62px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+#vpsArea .v-g2{display:grid;grid-template-columns:1fr 1fr;gap:0 13px}
+#vpsArea .v-g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 13px}
+#vpsArea .v-modal-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+#vpsArea .v-paste{border:1px dashed var(--o-accent);background:rgba(232,98,58,.05);border-radius:12px;padding:12px;margin-bottom:16px}
+#vpsArea .v-paste .ph{font-size:12px;font-weight:600;color:var(--o-accent-press);margin-bottom:7px}
+#vpsArea .v-kv{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--o-line-soft)}
+#vpsArea .v-kv:last-of-type{border-bottom:none}
+#vpsArea .v-kv .kk{width:118px;flex-shrink:0;font-size:12px;font-weight:600;color:var(--o-faint)}
+#vpsArea .v-kv .vv{flex:1;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;word-break:break-all;cursor:pointer}
+#vpsArea .v-kv .vv.blur{filter:blur(5px)}
+#vpsArea .v-kv .vv.blur:hover{filter:none}
+@media(max-width:760px){#vpsArea .v-g2,#vpsArea .v-g3{grid-template-columns:1fr}#vpsArea .v-stats{grid-template-columns:repeat(2,1fr)}}
+
 @media(max-width:920px){
   .grid{grid-template-columns:repeat(2,1fr)}
 }
@@ -313,9 +402,12 @@ pre{
       </div>
 
       <nav class="nav">
-        <div class="nav-label">Manage</div>
-        <div class="nav-item active" onclick="goSection('subsView', this)"><span class="ico">📋</span> Subscriptions</div>
-        <div class="nav-item" onclick="goSection('detailView', this)"><span class="ico">🔍</span> Inspect</div>
+        <div class="nav-label">Subscriptions</div>
+        <div class="nav-item active" onclick="showArea('subs','Subscriptions','Manage subscription links, nodes & access','subsView',this)"><span class="ico">📋</span> Subscriptions</div>
+        <div class="nav-item" onclick="showArea('subs','Inspect','Inspect a subscription’s nodes & logs','detailView',this)"><span class="ico">🔍</span> Inspect</div>
+        <div class="nav-label">VPS</div>
+        <div class="nav-item" onclick="showArea('vps','VPS Servers','Servers, panel logins & regions','vGridCard',this)"><span class="ico">🖥️</span> VPS Servers</div>
+        <div class="nav-item" onclick="showArea('vps','Customers','Who is on which server, type & expiry','vCustCard',this)"><span class="ico">👤</span> Customers</div>
         <div class="nav-label">System</div>
         <div class="nav-item" onclick="globalAllow()"><span class="ico">⚡</span> Allow All 5 Min</div>
         <div class="nav-item" onclick="checkGlobalStatus()"><span class="ico">🔄</span> Global Status</div>
@@ -331,8 +423,8 @@ pre{
     <div class="main">
       <header class="topbar">
         <div>
-          <h1>Subscriptions</h1>
-          <div class="crumb">Manage subscription links, nodes & access</div>
+          <h1 id="pageTitle">Subscriptions</h1>
+          <div class="crumb" id="pageCrumb">Manage subscription links, nodes & access</div>
         </div>
         <div class="topbar-right">
           <div class="field apibase-field" style="min-width:240px">
@@ -342,6 +434,8 @@ pre{
       </header>
 
       <div class="content">
+
+        <div id="subsArea">
 
         <!-- Stats -->
         <div class="grid">
@@ -466,6 +560,34 @@ pre{
             </div>
             <pre id="raw"></pre>
           </div>
+        </div>
+
+        </div><!-- /subsArea -->
+
+        <!-- ===== VPS area (orange Claude theme) ===== -->
+        <div id="vpsArea" style="display:none">
+          <div class="v-stats" id="vStats"></div>
+
+          <div id="vGridCard">
+            <div class="v-head">
+              <div><h2>VPS Servers</h2><div class="sub" id="vGridSub"></div></div>
+              <button class="v-btn v-btn-glass" onclick="vOpenVps()">+ Add VPS</button>
+            </div>
+            <div class="v-grid" id="vGrid"></div>
+          </div>
+
+          <div id="vCustCard" style="margin-top:24px">
+            <div class="v-head">
+              <div><h2>Customers</h2><div class="sub" id="vCustSub"></div></div>
+              <div style="display:flex;gap:8px">
+                <button class="v-btn v-btn-ghost" id="vClearFilter" style="display:none" onclick="vSetFilter(null)">Show all</button>
+                <button class="v-btn v-btn-glass" onclick="vOpenCust()">+ Add Customer</button>
+              </div>
+            </div>
+            <div id="vCustWrap"></div>
+          </div>
+
+          <div id="vModalRoot"></div>
         </div>
 
       </div>
@@ -842,6 +964,293 @@ function goSection(targetId, navEl){
   const el = document.getElementById(targetId);
   if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
 }
+
+/* ============================================================ *
+ *  Area switching (Subscriptions <-> VPS)
+ * ============================================================ */
+let vpsLoaded = false;
+function showArea(area, title, crumb, scrollId, navEl){
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  if(navEl) navEl.classList.add("active");
+  document.getElementById("pageTitle").textContent = title;
+  document.getElementById("pageCrumb").textContent = crumb;
+  const subs = document.getElementById("subsArea");
+  const vps  = document.getElementById("vpsArea");
+  if(area === "vps"){
+    subs.style.display = "none";
+    vps.style.display = "block";
+    if(!vpsLoaded){ vpsLoaded = true; vLoad(); }
+  } else {
+    vps.style.display = "none";
+    subs.style.display = "block";
+  }
+  const el = document.getElementById(scrollId);
+  if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+/* ============================================================ *
+ *  VPS + Customers (D1 via /api/admin/vps/*, X-Admin-Token)
+ * ============================================================ */
+const VSTATE = {vps:[], customers:[]};
+let VFILTER = null;
+const V_TYPES = ["VLESS","VMess","Trojan","Shadowsocks","Hysteria2","TUIC"];
+
+function vBase(){ return document.getElementById("apiBase").value.replace(/\/$/, ""); }
+
+async function vApi(method, path, body){
+  const opt = {method, headers:{"X-Admin-Token": adminToken}};
+  if(body){ opt.headers["Content-Type"] = "application/json"; opt.body = JSON.stringify(body); }
+  const res = await fetch(vBase() + path, opt);
+  let data = {};
+  try { data = await res.json(); } catch {}
+  if(res.status === 403){ toast("Forbidden — unlock again."); throw new Error("Forbidden"); }
+  if(!data.ok){ toast(data.error || "Error"); throw new Error(data.error || "Error"); }
+  return data;
+}
+
+async function vLoad(){
+  try{
+    const d = await vApi("GET", "/api/admin/vps/data");
+    VSTATE.vps = d.vps || [];
+    VSTATE.customers = d.customers || [];
+    vRender();
+  }catch(e){ /* toast already shown */ }
+}
+
+function vVps(id){ return VSTATE.vps.find(v => v.id === id) || null; }
+function vCust(id){ return VSTATE.customers.find(c => c.id === id) || null; }
+function vLabel(v){ return v ? (v.label || v.ip || ("VPS #" + v.id)) : "—"; }
+
+function vDaysLeft(d){
+  if(!d) return null;
+  const dt = new Date(d + "T00:00:00");
+  if(isNaN(dt)) return null;
+  const today = new Date(); today.setHours(0,0,0,0);
+  return Math.round((dt - today) / 86400000);
+}
+function vExpiryBadge(d){
+  const n = vDaysLeft(d);
+  if(n === null) return '<span class="v-badge gray">No expiry</span>';
+  if(n < 0) return `<span class="v-badge red">Expired ${-n}d</span>`;
+  if(n <= 7) return `<span class="v-badge amber">${n}d left</span>`;
+  return `<span class="v-badge green">${n}d</span>`;
+}
+function vCustState(c){
+  if(c.status === "cancelled") return "cancelled";
+  if(c.status === "paused") return "paused";
+  const n = vDaysLeft(c.expiry_date);
+  if(n === null) return "active";
+  if(n < 0) return "expired";
+  if(n <= 7) return "expiring";
+  return "active";
+}
+
+function vRender(){ vRenderStats(); vRenderGrid(); vRenderCustomers(); }
+
+function vRenderStats(){
+  const cs = VSTATE.customers;
+  let active=0, expiring=0, expired=0;
+  cs.forEach(c => { const s = vCustState(c); if(s==="active") active++; else if(s==="expiring"){expiring++;active++;} else if(s==="expired") expired++; });
+  const cards = [
+    ["VPS Servers", VSTATE.vps.length, ""],
+    ["Customers", cs.length, ""],
+    ["Active", active, "good"],
+    ["Expiring ≤7d", expiring, "warn"],
+    ["Expired", expired, "bad"]
+  ];
+  document.getElementById("vStats").innerHTML = cards.map(c =>
+    `<div class="v-stat ${c[2]}"><div class="k">${c[0]}</div><div class="v">${c[1]}</div></div>`).join("");
+}
+
+function vRenderGrid(){
+  const grid = document.getElementById("vGrid");
+  document.getElementById("vGridSub").textContent = VSTATE.vps.length + " server" + (VSTATE.vps.length===1?"":"s");
+  if(!VSTATE.vps.length){ grid.innerHTML = '<div class="v-empty">No VPS yet. Click “+ Add VPS”, then paste your panel install block.</div>'; return; }
+  grid.innerHTML = VSTATE.vps.map(v => {
+    const custs = VSTATE.customers.filter(c => c.vps_id === v.id);
+    let exp=0, soon=0;
+    custs.forEach(c => { const s = vCustState(c); if(s==="expired") exp++; else if(s==="expiring") soon++; });
+    let chips = `<span class="v-chip accent">${custs.length} user${custs.length===1?"":"s"}</span>`;
+    if(soon) chips += `<span class="v-chip amber">${soon} expiring</span>`;
+    if(exp) chips += `<span class="v-chip red">${exp} expired</span>`;
+    const region = v.region ? `<span class="v-chip">${esc(v.region)}</span>` : "";
+    return `<div class="v-card${VFILTER===v.id?" sel":""}">
+      <div class="v-card-top"><div class="v-card-title">${esc(vLabel(v))}</div>${region}</div>
+      <div class="v-rows">
+        <div>IP <span class="mono">${esc(v.ip||"—")}</span></div>
+        ${v.provider?`<div>Provider <span class="mono">${esc(v.provider)}</span></div>`:""}
+        <div>Panel <span class="mono">${esc(v.panel_type||"—")}${v.panel_port?(" :"+esc(v.panel_port)):""}</span></div>
+      </div>
+      <div class="v-foot">${chips}</div>
+      <div class="v-foot" style="margin-top:4px">
+        <button class="v-btn v-btn-glass v-btn-sm" onclick="vSetFilter(${v.id})">Users</button>
+        <button class="v-btn v-btn-glass v-btn-sm" onclick="vShowLogin(${v.id})">Login info</button>
+        <button class="v-btn v-btn-ghost v-btn-sm" onclick="vOpenVps(${v.id})">Edit</button>
+        <button class="v-btn v-btn-danger v-btn-sm" onclick="vDelVps(${v.id})">Delete</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function vRenderCustomers(){
+  const wrap = document.getElementById("vCustWrap");
+  let list = VSTATE.customers.slice();
+  if(VFILTER !== null) list = list.filter(c => c.vps_id === VFILTER);
+  const sub = document.getElementById("vCustSub");
+  const clr = document.getElementById("vClearFilter");
+  if(VFILTER !== null){ sub.textContent = "Filtered to " + vLabel(vVps(VFILTER)) + " · " + list.length + " user" + (list.length===1?"":"s"); clr.style.display = ""; }
+  else { sub.textContent = VSTATE.customers.length + " total"; clr.style.display = "none"; }
+
+  if(!list.length){ wrap.innerHTML = `<div class="v-empty">No customers${VFILTER!==null?" on this VPS":""} yet.</div>`; return; }
+  const rows = list.map(c => {
+    const statusChip = c.status==="cancelled" ? '<span class="v-badge gray">Cancelled</span>'
+      : (c.status==="paused" ? '<span class="v-badge amber">Paused</span>' : '<span class="v-badge green">Active</span>');
+    const price = (c.price!==null && c.price!==undefined && c.price!=="") ? (esc(c.currency||"")+" "+esc(c.price)) : '<span class="v-muted">—</span>';
+    const vv = vVps(c.vps_id);
+    return `<tr>
+      <td><div class="v-cust-name">${esc(c.name)}</div>${c.contact?`<div class="v-muted" style="font-size:11.5px">${esc(c.contact)}</div>`:""}</td>
+      <td>${esc(vLabel(vv))}</td>
+      <td>${c.service_type?`<span class="v-chip">${esc(c.service_type)}</span>`:'<span class="v-muted">—</span>'}</td>
+      <td>${esc(c.region || (vv && vv.region) || "")}</td>
+      <td>${vExpiryBadge(c.expiry_date)}${c.expiry_date?`<div class="v-muted" style="font-size:11px;margin-top:3px">${esc(c.expiry_date)}</div>`:""}</td>
+      <td>${price}</td>
+      <td>${statusChip}</td>
+      <td><div class="v-row-actions">
+        <button class="v-btn v-btn-ghost v-btn-sm" onclick="vOpenCust(${c.id})">Edit</button>
+        <button class="v-btn v-btn-danger v-btn-sm" onclick="vDelCust(${c.id})">Del</button>
+      </div></td>
+    </tr>`;
+  }).join("");
+  wrap.innerHTML = `<div class="v-table-wrap"><table><thead><tr>
+    <th>Customer</th><th>VPS</th><th>Type</th><th>Region</th><th>Expiry</th><th>Price</th><th>Status</th><th></th>
+    </tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function vSetFilter(id){
+  VFILTER = id; vRender();
+  if(id !== null) document.getElementById("vCustCard").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+/* ---- modal infra ---- */
+function vCloseModal(){ document.getElementById("vModalRoot").innerHTML = ""; }
+function vField(label, inner){ return `<div class="v-f"><label>${label}</label>${inner}</div>`; }
+function vInp(id, val, ph, type){ return `<input id="${id}" type="${type||"text"}" value="${esc(val??"")}" placeholder="${esc(ph||"")}">`; }
+function vTxt(id, val, ph){ return `<textarea id="${id}" placeholder="${esc(ph||"")}">${esc(val??"")}</textarea>`; }
+function vGet(id){ const e = document.getElementById(id); return e ? e.value.trim() : ""; }
+
+/* ---- VPS modal ---- */
+function vOpenVps(id){
+  const v = (id ? vVps(id) : {}) || {};
+  const typeOpts = ["3x-ui","x-ui","Marzban","Hiddify","sing-box","Other"];
+  const typeSel = `<select id="f_panel_type">${typeOpts.map(t => `<option${(v.panel_type||"3x-ui")===t?" selected":""}>${t}</option>`).join("")}</select>`;
+  const html = `<div class="v-overlay" onclick="if(event.target===this)vCloseModal()"><div class="v-modal">
+    <h3>${id?"Edit VPS":"Add VPS"}</h3><div class="v-msub">Server credentials & panel login</div>
+    ${id?"":`<div class="v-paste"><div class="ph">⚡ Smart paste — paste your panel install block to auto-fill</div>${vTxt("f_paste","","Panel Installation Complete!\nUsername: ...\nPassword: ...\nPort: ...\nWebBasePath: ...\nAccess URL: https://1.2.3.4:54321/xxxx")}<button class="v-btn v-btn-glass v-btn-sm" style="margin-top:8px" onclick="vDoParse()">Auto-fill fields</button></div>`}
+    <div class="v-g2">${vField("Label", vInp("f_label", v.label, "HK-01"))}${vField("Region", vInp("f_region", v.region, "Hong Kong"))}</div>
+    <div class="v-g2">${vField("IP address", vInp("f_ip", v.ip, "173.254.247.213"))}${vField("Provider", vInp("f_provider", v.provider, "BandwagonHost"))}</div>
+    ${vField("Panel type", typeSel)}
+    <div class="v-g3">${vField("Panel username", vInp("f_panel_username", v.panel_username))}${vField("Panel password", vInp("f_panel_password", v.panel_password))}${vField("Panel port", vInp("f_panel_port", v.panel_port, "54321"))}</div>
+    ${vField("Web base path", vInp("f_web_base_path", v.web_base_path))}
+    ${vField("Access URL", vInp("f_access_url", v.access_url, "https://ip:port/path"))}
+    <div class="v-g3">${vField("SSH user", vInp("f_ssh_user", v.ssh_user, "root"))}${vField("SSH password", vInp("f_ssh_password", v.ssh_password))}${vField("SSH port", vInp("f_ssh_port", v.ssh_port, "22"))}</div>
+    ${vField("Raw install info (verbatim)", vTxt("f_raw_info", v.raw_info))}
+    ${vField("Notes", vTxt("f_notes", v.notes))}
+    <div class="v-modal-foot"><button class="v-btn v-btn-ghost" onclick="vCloseModal()">Cancel</button>
+    <button class="v-btn v-btn-primary" onclick="vSaveVps(${id||""})">${id?"Save changes":"Add VPS"}</button></div>
+  </div></div>`;
+  document.getElementById("vModalRoot").innerHTML = html;
+}
+
+function vDoParse(){
+  const t = vGet("f_paste"); if(!t) return;
+  const grab = re => { const m = t.match(re); return m ? m[1] : ""; };
+  const set = (id, val) => { if(val){ const e = document.getElementById(id); if(e) e.value = val; } };
+  set("f_panel_username", grab(/Username:\s*(\S+)/i));
+  set("f_panel_password", grab(/Password:\s*(\S+)/i));
+  set("f_panel_port", grab(/Port:\s*(\S+)/i));
+  set("f_web_base_path", grab(/WebBasePath:\s*(\S+)/i));
+  set("f_access_url", grab(/Access\s*URL:\s*(\S+)/i));
+  set("f_ip", grab(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/));
+  document.getElementById("f_raw_info").value = t;
+  toast("Fields filled from paste.");
+}
+
+async function vSaveVps(id){
+  const data = {
+    label:vGet("f_label"), ip:vGet("f_ip"), region:vGet("f_region"), provider:vGet("f_provider"),
+    panel_type:vGet("f_panel_type"), panel_username:vGet("f_panel_username"), panel_password:vGet("f_panel_password"),
+    panel_port:vGet("f_panel_port"), web_base_path:vGet("f_web_base_path"), access_url:vGet("f_access_url"),
+    ssh_user:vGet("f_ssh_user"), ssh_password:vGet("f_ssh_password"), ssh_port:vGet("f_ssh_port"),
+    raw_info:vGet("f_raw_info"), notes:vGet("f_notes")
+  };
+  if(id) data.id = id;
+  try{ await vApi("POST", "/api/admin/vps/upsert", data); toast(id?"VPS updated.":"VPS added."); vCloseModal(); await vLoad(); }catch(e){}
+}
+
+async function vDelVps(id){
+  const v = vVps(id);
+  if(!confirm(`Delete ${vLabel(v)}? Customers on it will be kept but unlinked.`)) return;
+  try{ await vApi("POST", "/api/admin/vps/delete", {id}); toast("VPS deleted."); if(VFILTER===id) VFILTER=null; await vLoad(); }catch(e){}
+}
+
+/* ---- login info viewer ---- */
+function vShowLogin(id){
+  const v = vVps(id); if(!v) return;
+  const row = (k, val, blur) => val ? `<div class="v-kv"><div class="kk">${k}</div><div class="vv${blur?" blur":""}" title="click to copy" onclick="copyText(${jsAttr(val)})">${esc(val)}</div></div>` : "";
+  const html = `<div class="v-overlay" onclick="if(event.target===this)vCloseModal()"><div class="v-modal">
+    <h3>${esc(vLabel(v))}</h3><div class="v-msub">Click any value to copy · password blurred until hover</div>
+    ${row("IP", v.ip)}${row("Region", v.region)}${row("Provider", v.provider)}${row("Panel type", v.panel_type)}
+    ${row("Username", v.panel_username)}${row("Password", v.panel_password, true)}${row("Port", v.panel_port)}${row("WebBasePath", v.web_base_path)}${row("Access URL", v.access_url)}
+    ${row("SSH user", v.ssh_user)}${row("SSH password", v.ssh_password, true)}${row("SSH port", v.ssh_port)}
+    ${v.raw_info?`<div class="v-f" style="margin-top:14px"><label>Raw install info</label>${vTxt("_vraw", v.raw_info)}</div>`:""}
+    ${v.notes?`<div class="v-f"><label>Notes</label><div class="vv" style="font-family:inherit;cursor:default">${esc(v.notes)}</div></div>`:""}
+    <div class="v-modal-foot"><button class="v-btn v-btn-glass" onclick="vOpenVps(${v.id})">Edit</button><button class="v-btn v-btn-primary" onclick="vCloseModal()">Done</button></div>
+  </div></div>`;
+  document.getElementById("vModalRoot").innerHTML = html;
+}
+
+/* ---- Customer modal ---- */
+function vOpenCust(id){
+  let c = (id ? vCust(id) : {}) || {};
+  if(!id && VFILTER !== null) c = {vps_id: VFILTER};
+  const vpsOpts = `<option value="">— none —</option>` + VSTATE.vps.map(v => `<option value="${v.id}"${c.vps_id===v.id?" selected":""}>${esc(vLabel(v))}${v.region?` (${esc(v.region)})`:""}</option>`).join("");
+  const statusOpts = ["active","paused","cancelled"].map(s => `<option${(c.status||"active")===s?" selected":""}>${s}</option>`).join("");
+  const typeList = V_TYPES.map(t => `<option value="${t}">`).join("");
+  const html = `<div class="v-overlay" onclick="if(event.target===this)vCloseModal()"><div class="v-modal">
+    <h3>${id?"Edit customer":"Add customer"}</h3><div class="v-msub">Who is using which VPS, type, region & expiry</div>
+    <div class="v-g2">${vField("Name", vInp("c_name", c.name, "Customer name"))}${vField("Contact", vInp("c_contact", c.contact, "Telegram / email"))}</div>
+    <div class="v-g2">${vField("VPS", `<select id="c_vps_id">${vpsOpts}</select>`)}${vField("Service type", `<input id="c_service_type" list="vTypeList" value="${esc(c.service_type??"")}" placeholder="VLESS"><datalist id="vTypeList">${typeList}</datalist>`)}</div>
+    <div class="v-g3">${vField("Region", vInp("c_region", c.region, "auto from VPS"))}${vField("Start date", vInp("c_start_date", c.start_date, "", "date"))}${vField("Expiry date", vInp("c_expiry_date", c.expiry_date, "", "date"))}</div>
+    <div class="v-g3">${vField("Price", vInp("c_price", c.price, "0", "number"))}${vField("Currency", vInp("c_currency", c.currency||"CNY", "CNY"))}${vField("Status", `<select id="c_status">${statusOpts}</select>`)}</div>
+    ${vField("Notes", vTxt("c_notes", c.notes))}
+    <div class="v-modal-foot"><button class="v-btn v-btn-ghost" onclick="vCloseModal()">Cancel</button>
+    <button class="v-btn v-btn-primary" onclick="vSaveCust(${id||""})">${id?"Save changes":"Add customer"}</button></div>
+  </div></div>`;
+  document.getElementById("vModalRoot").innerHTML = html;
+}
+
+async function vSaveCust(id){
+  const name = vGet("c_name");
+  if(!name){ toast("Name is required."); return; }
+  const vpsVal = vGet("c_vps_id");
+  const data = {
+    name, contact:vGet("c_contact"), vps_id: vpsVal ? parseInt(vpsVal,10) : null,
+    service_type:vGet("c_service_type"), region:vGet("c_region"),
+    start_date:vGet("c_start_date"), expiry_date:vGet("c_expiry_date"),
+    price: vGet("c_price")!=="" ? parseFloat(vGet("c_price")) : null, currency:vGet("c_currency"),
+    status:vGet("c_status"), notes:vGet("c_notes")
+  };
+  if(id) data.id = id;
+  try{ await vApi("POST", "/api/admin/customer/upsert", data); toast(id?"Customer updated.":"Customer added."); vCloseModal(); await vLoad(); }catch(e){}
+}
+
+async function vDelCust(id){
+  const c = vCust(id);
+  if(!confirm(`Delete customer ${c?c.name:""}?`)) return;
+  try{ await vApi("POST", "/api/admin/customer/delete", {id}); toast("Customer deleted."); await vLoad(); }catch(e){}
+}
+
+document.addEventListener("keydown", e => { if(e.key === "Escape") vCloseModal(); });
 </script>
 
 </body>

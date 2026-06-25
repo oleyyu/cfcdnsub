@@ -1066,6 +1066,104 @@ async function handleAdminSubList(request, env, url) {
   });
 }
 
+/* ============================================================ *
+ *  VPS inventory + customers (D1 binding `DB`)
+ *  All endpoints require X-Admin-Token via checkAdmin().
+ * ============================================================ */
+
+const VPS_FIELDS = [
+  "label", "ip", "region", "provider", "panel_type",
+  "panel_username", "panel_password", "panel_port", "web_base_path",
+  "access_url", "ssh_port", "ssh_user", "ssh_password", "raw_info", "notes"
+];
+const CUST_FIELDS = [
+  "name", "contact", "vps_id", "service_type", "region",
+  "start_date", "expiry_date", "price", "currency", "status", "notes"
+];
+
+function cleanField(v) {
+  if (v === undefined || v === null || v === "") return null;
+  return v;
+}
+
+async function readJsonBody(request) {
+  try { return await request.json(); } catch { return {}; }
+}
+
+function requireDb(env) {
+  return env.DB ? null : json({ ok: false, error: "D1 binding DB not configured" }, 500);
+}
+
+async function handleVpsData(request, env) {
+  if (!checkAdmin(request, env)) return json({ ok: false, error: "Forbidden" }, 403);
+  const missing = requireDb(env); if (missing) return missing;
+  const vps = (await env.DB.prepare(
+    "SELECT * FROM vps ORDER BY label COLLATE NOCASE, id"
+  ).all()).results || [];
+  const customers = (await env.DB.prepare(
+    "SELECT * FROM customers ORDER BY expiry_date IS NULL, expiry_date, name COLLATE NOCASE"
+  ).all()).results || [];
+  return json({ ok: true, vps, customers });
+}
+
+async function handleVpsUpsert(request, env) {
+  if (!checkAdmin(request, env)) return json({ ok: false, error: "Forbidden" }, 403);
+  const missing = requireDb(env); if (missing) return missing;
+  const b = await readJsonBody(request);
+  const id = b.id ? parseInt(b.id, 10) : null;
+  if (id) {
+    const sets = VPS_FIELDS.map(k => `${k} = ?`).join(", ");
+    await env.DB.prepare(`UPDATE vps SET ${sets} WHERE id = ?`)
+      .bind(...VPS_FIELDS.map(k => cleanField(b[k])), id).run();
+    return json({ ok: true, id });
+  }
+  const cols = VPS_FIELDS.join(", ");
+  const ph = VPS_FIELDS.map(() => "?").join(", ");
+  const res = await env.DB.prepare(`INSERT INTO vps (${cols}) VALUES (${ph})`)
+    .bind(...VPS_FIELDS.map(k => cleanField(b[k]))).run();
+  return json({ ok: true, id: res.meta.last_row_id });
+}
+
+async function handleVpsDelete(request, env) {
+  if (!checkAdmin(request, env)) return json({ ok: false, error: "Forbidden" }, 403);
+  const missing = requireDb(env); if (missing) return missing;
+  const b = await readJsonBody(request);
+  const id = parseInt(b.id, 10);
+  if (!Number.isInteger(id)) return json({ ok: false, error: "Missing id" }, 400);
+  await env.DB.prepare("UPDATE customers SET vps_id = NULL WHERE vps_id = ?").bind(id).run();
+  await env.DB.prepare("DELETE FROM vps WHERE id = ?").bind(id).run();
+  return json({ ok: true });
+}
+
+async function handleCustomerUpsert(request, env) {
+  if (!checkAdmin(request, env)) return json({ ok: false, error: "Forbidden" }, 403);
+  const missing = requireDb(env); if (missing) return missing;
+  const b = await readJsonBody(request);
+  if (!String(b.name || "").trim()) return json({ ok: false, error: "Name required" }, 400);
+  const id = b.id ? parseInt(b.id, 10) : null;
+  if (id) {
+    const sets = CUST_FIELDS.map(k => `${k} = ?`).join(", ");
+    await env.DB.prepare(`UPDATE customers SET ${sets} WHERE id = ?`)
+      .bind(...CUST_FIELDS.map(k => cleanField(b[k])), id).run();
+    return json({ ok: true, id });
+  }
+  const cols = CUST_FIELDS.join(", ");
+  const ph = CUST_FIELDS.map(() => "?").join(", ");
+  const res = await env.DB.prepare(`INSERT INTO customers (${cols}) VALUES (${ph})`)
+    .bind(...CUST_FIELDS.map(k => cleanField(b[k]))).run();
+  return json({ ok: true, id: res.meta.last_row_id });
+}
+
+async function handleCustomerDelete(request, env) {
+  if (!checkAdmin(request, env)) return json({ ok: false, error: "Forbidden" }, 403);
+  const missing = requireDb(env); if (missing) return missing;
+  const b = await readJsonBody(request);
+  const id = parseInt(b.id, 10);
+  if (!Number.isInteger(id)) return json({ ok: false, error: "Missing id" }, 400);
+  await env.DB.prepare("DELETE FROM customers WHERE id = ?").bind(id).run();
+  return json({ ok: true });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -1121,6 +1219,22 @@ export default {
 
     if (request.method === "GET" && url.pathname === "/api/admin/sub/global-status") {
       return handleAdminGlobalStatus(request, env);
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/admin/vps/data") {
+      return handleVpsData(request, env);
+    }
+    if (request.method === "POST" && url.pathname === "/api/admin/vps/upsert") {
+      return handleVpsUpsert(request, env);
+    }
+    if (request.method === "POST" && url.pathname === "/api/admin/vps/delete") {
+      return handleVpsDelete(request, env);
+    }
+    if (request.method === "POST" && url.pathname === "/api/admin/customer/upsert") {
+      return handleCustomerUpsert(request, env);
+    }
+    if (request.method === "POST" && url.pathname === "/api/admin/customer/delete") {
+      return handleCustomerDelete(request, env);
     }
 
     if (request.method === "GET" && url.pathname.startsWith("/sub/")) {

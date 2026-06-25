@@ -58,7 +58,8 @@ Only commit/push when the user asks.
 ## Bindings & secrets
 
 `wrangler.toml`:
-- `SUB_STORE` — KV namespace (all data lives here)
+- `SUB_STORE` — KV namespace (subscription data lives here)
+- `DB` — D1 database `vps-admin-db` (VPS inventory + customers; shared with the standalone `vps-admin` Worker)
 - `ASSETS` — static assets from `./public`, SPA fallback, `run_worker_first = true`
 
 Secrets (set in CF Dashboard or `wrangler secret put`, **never in git**):
@@ -91,6 +92,18 @@ Admin (all require `X-Admin-Token` via `checkAdmin`):
 - `POST /api/admin/sub/enable` · `/disable` — toggle `downloadEnabled`
 - `POST /api/admin/sub/delete` — remove a sub + its logs + dedup mappings
 - `POST /api/admin/sub/global-allow` · `GET /global-status`
+
+VPS inventory (D1 binding `DB`, also `checkAdmin`-gated):
+- `GET  /api/admin/vps/data` — all VPS + customers in one snapshot
+- `POST /api/admin/vps/upsert` — create (no `id`) or update (`id`) a VPS
+- `POST /api/admin/vps/delete` — delete a VPS, unlinks its customers (`vps_id = NULL`)
+- `POST /api/admin/customer/upsert` · `/api/admin/customer/delete`
+
+The admin page has two areas toggled by the sidebar (`showArea()`): the original
+Subscriptions UI (`#subsArea`, dark indigo) and a VPS/Customers console
+(`#vpsArea`, orange "Claude" glass theme, all CSS scoped under `#vpsArea`).
+VPS JS helpers are prefixed `v*` and use `adminToken` + `#apiBase` like the rest.
+D1 schema lives at `../../../vps-admin/schema.sql`.
 
 ## Conventions
 
