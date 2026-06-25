@@ -20,8 +20,8 @@ run_worker_first = true
 binding = "SUB_STORE"
 id = "accd8ed107f74dcc925eda758ad66498"
 
-# VPS inventory + customers (shared with the standalone vps-admin Worker)
+# VPS inventory + customers (D1 in this account: oleyyuissmart)
 [[d1_databases]]
 binding = "DB"
 database_name = "vps-admin-db"
-database_id = "c96a2fba-e8d2-424e-a166-6c6a356b26dd"
+database_id = "539310c4-e664-403b-beea-88994f617dc0"
